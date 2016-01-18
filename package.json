@@ -14,6 +14,7 @@
   "devDependencies": {
     "chai": "^3.4.1",
     "gulp": "^3.9.0",
+    "gulp-mocha": "^2.2.0",
     "mocha": "^2.3.4",
     "via-build-tools": "git+https://github.com/Demurgos/via-build-tools.git"
   },

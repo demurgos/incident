@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {captureStackTrace} from 'utils';
+import {captureStackTrace} from './utils';
 
 export interface IncidentConstructorOptions {
     stack?:string;
