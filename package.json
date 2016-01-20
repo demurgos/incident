@@ -4,7 +4,8 @@
   "description": "Simple custom errors.",
   "main": "build/node/node/main.js",
   "scripts": {
-    "test": "gulp test"
+    "test": "gulp test",
+    "postinstall": "gulp install.noNpm"
   },
   "keywords": [
     "error"
@@ -14,9 +15,7 @@
   "devDependencies": {
     "chai": "^3.4.1",
     "gulp": "^3.9.0",
-    "gulp-mocha": "^2.2.0",
-    "mocha": "^2.3.4",
-    "via-build-tools": "git+https://github.com/Demurgos/via-build-tools.git"
+    "via-build-tools": "^0.3.0"
   },
   "jspm": {
     "configFile": "systemjs.config.js",
