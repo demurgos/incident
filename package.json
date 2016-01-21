@@ -19,7 +19,7 @@
   "devDependencies": {
     "chai": "^3.4.1",
     "gulp": "^3.9.0",
-    "via-build-tools": "^0.3.0"
+    "via-build-tools": "^0.3.2"
   },
   "jspm": {
     "configFile": "systemjs.config.js",
