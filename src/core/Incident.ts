@@ -62,7 +62,7 @@ export class Incident extends Error {
     setCause(cause:Error):Incident {
         if (cause instanceof Error) {
             this.cause = cause;
-        } else {
+        } else if(cause !== null && cause !== undefined) {
             console.warn("Incident expects cause to be an Error or array of Errors");
             this.cause = null;
         }
