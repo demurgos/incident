@@ -18,20 +18,20 @@ if (Error.captureStackTrace) {
     captureStackTrace = function captureStackTrace (error, ctr) {
         let container = new Error();
 
-        Object.defineProperty(error, 'stack', {
+        Object.defineProperty(error, "stack", {
             configurable: true,
             get: function getStack () {
                 let stack = container.stack;
 
                 // Replace property with value for faster future accesses.
-                Object.defineProperty(this, 'stack', {
+                Object.defineProperty(this, "stack", {
                     value: stack
                 });
 
                 return stack
             },
             set: function setStack (stack) {
-                Object.defineProperty(error, 'stack', {
+                Object.defineProperty(error, "stack", {
                     configurable: true,
                     value: stack,
                     writable: true

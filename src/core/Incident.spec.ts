@@ -1,5 +1,5 @@
-import {Incident} from './Incident';
-import * as chai from 'chai';
+import {Incident} from "./Incident";
+import * as chai from "chai";
 
 describe("Incident", function() {
     it("should inherit from the native Error", function () {

@@ -1,5 +1,5 @@
-import * as _ from 'lodash';
-import {captureStackTrace} from './utils';
+import * as _ from "lodash";
+import {captureStackTrace} from "./utils";
 
 export interface IncidentConstructorOptions {
     stack?:string;
@@ -11,7 +11,7 @@ export interface IncidentConstructorOptions {
 }
 
 export class Incident extends Error {
-    static name = 'Incident';
+    static name = "Incident";
 
     stack:string;
     name:string;
@@ -19,7 +19,7 @@ export class Incident extends Error {
     cause:Error;
     data:{[key:string]: any};
 
-    Incident:Object; // reference to the root Incident class for compatibility between various Incident definitions.
+    // Incident:Object; // reference to the root Incident class for compatibility between various Incident definitions.
 
     constructor();
     constructor(simpleError:Error);
@@ -49,14 +49,14 @@ export class Incident extends Error {
 
         super(options.message);
 
-        this.setMessage(options.message || '');
+        this.setMessage(options.message || "");
         this.setCause(options.cause || null);
         this.setName(options.name || Incident.name);
         this.setData(options.data || {});
 
         captureStackTrace(this, this.constructor);
 
-        // this.setStack('');
+        // this.setStack("");
     }
 
     setCause(cause:Error):Incident {

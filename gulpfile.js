@@ -13,9 +13,3 @@ buildTools.tasks.build(gulp, locations, {tsc: {typescript: typescript}});
 buildTools.tasks.install(gulp, locations);
 buildTools.tasks.project(gulp, locations);
 buildTools.tasks.test(gulp, locations);
-
-gulp.task('project.dist.node', ['build.node'], function(){
-  return gulp
-    .src(['build/node/**/*', '!build/node/**/*.spec.js'], {base: 'build/node'})
-    .pipe(gulp.dest('dist/node'))
-});
