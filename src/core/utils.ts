@@ -1,17 +1,17 @@
 interface ErrorConstructor {
     new (message?: string): Error;
     (message?: string): Error;
-    prototype: Error
-    captureStackTrace:(targetObject:any, constructorOpt?:any)=>void;
+    prototype: Error;
+    captureStackTrace: (targetObject: any, constructorOpt?: any) => void;
 }
 
 interface Error {
     stack: string;
 }
 
-declare var Error:ErrorConstructor;
+declare var Error: ErrorConstructor;
 
-export let captureStackTrace:(targetObject:any, constructorOpt?:any)=>void;
+export let captureStackTrace: (targetObject: any, constructorOpt?: any) => void;
 if (Error.captureStackTrace) {
     captureStackTrace = Error.captureStackTrace;
 } else {
@@ -28,7 +28,7 @@ if (Error.captureStackTrace) {
                     value: stack
                 });
 
-                return stack
+                return stack;
             },
             set: function setStack (stack) {
                 Object.defineProperty(error, "stack", {
@@ -38,5 +38,5 @@ if (Error.captureStackTrace) {
                 });
             }
         });
-    }
+    };
 }
