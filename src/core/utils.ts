@@ -2,7 +2,7 @@ interface ErrorConstructor {
     new (message?: string): Error;
     (message?: string): Error;
     prototype: Error;
-    captureStackTrace: (targetObject: any, constructorOpt?: any) => void;
+    captureStackTrace?: (targetObject: any, constructorOpt?: any) => void;
 }
 
 interface Error {
