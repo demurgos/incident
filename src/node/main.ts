@@ -1,3 +1,1 @@
-import {Incident} from '../core/Incident';
-
-export = Incident;
+export {Incident} from '../core/incident';

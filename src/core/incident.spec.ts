@@ -1,4 +1,4 @@
-import {Incident} from './Incident';
+import {Incident} from './incident';
 import * as chai from 'chai';
 
 describe("Incident", function() {
