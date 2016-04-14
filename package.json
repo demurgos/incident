@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Simple custom errors.",
   "main": "build/node/node/main.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/demurgos/incident.git"
+  },
   "scripts": {
     "test": "gulp test"
   },
@@ -16,7 +20,7 @@
     "gulp": "^3.9.0",
     "gulp-mocha": "^2.2.0",
     "mocha": "^2.3.4",
-    "via-build-tools": "git+https://github.com/Demurgos/via-build-tools.git"
+    "via-build-tools": "^0.7.7"
   },
   "jspm": {
     "configFile": "systemjs.config.js",
