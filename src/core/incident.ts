@@ -1,5 +1,5 @@
-import * as _ from 'lodash';
-import {captureStackTrace} from './utils';
+import * as _ from "lodash";
+import {captureStackTrace} from "./utils";
 
 const INCIDENT_NAME: string = "Incident";
 
@@ -21,6 +21,16 @@ export class Incident extends Error {
 
   Incident: Object; // reference to the root Incident class for compatibility between various Incident definitions.
 
+  static cast (obj: Incident|Error|any): Incident {
+    if (obj instanceof Incident) {
+      return obj;
+    } else if (obj instanceof Error) {
+      return new Incident(obj.name, obj.message);
+    } else {
+      return new Incident();
+    }
+  }
+
   constructor();
   constructor(simpleError: Error);
   constructor(message: string);
@@ -31,8 +41,8 @@ export class Incident extends Error {
   constructor(cause: Error, name: string, data: {[key: string]: any}, message: string);
 
   constructor(...args: any[]) {
-    var options: IncidentConstructorOptions = {};
-    var i = 0, l = args.length;
+    let options: IncidentConstructorOptions = {};
+    let i = 0, l = args.length;
 
     if (l > 0) {
       options.message = args[--l];
@@ -49,7 +59,7 @@ export class Incident extends Error {
 
     super(options.message);
 
-    this.setMessage(options.message || '');
+    this.setMessage(options.message || "");
     this.setCause(options.cause || null);
 
     let name: string;
@@ -103,16 +113,6 @@ export class Incident extends Error {
 
   toString() {
     return Error.toString.apply(this, arguments);
-  }
-
-  static cast = function (obj: Incident|Error|any): Incident {
-    if (obj instanceof Incident) {
-      return obj;
-    } else if (obj instanceof Error) {
-      return new Incident(obj.name, obj.message);
-    } else {
-      return new Incident();
-    }
   }
 }
 
