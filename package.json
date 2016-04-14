@@ -1,6 +1,6 @@
 {
   "name": "incident",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Simple custom errors.",
   "main": "dist/node/node/main.js",
   "repository": {
