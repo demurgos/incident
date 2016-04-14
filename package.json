@@ -2,7 +2,7 @@
   "name": "incident",
   "version": "1.0.0",
   "description": "Simple custom errors.",
-  "main": "build/node/node/main.js",
+  "main": "dist/node/node/main.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/demurgos/incident.git"

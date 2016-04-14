@@ -10,6 +10,7 @@ jspm_packages
 
 ### Build directory ###
 build
+coverage
 
 ### Temporary files ###
 # Temporary directory
