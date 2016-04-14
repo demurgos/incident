@@ -2,7 +2,7 @@ interface ErrorConstructor {
   new (message?: string): Error;
   (message?: string): Error;
   prototype: Error;
-  captureStackTrace: (targetObject: any, constructorOpt?: any)=>void;
+  captureStackTrace?: (targetObject: any, constructorOpt?: any) => void;
 }
 
 interface Error {
@@ -11,7 +11,7 @@ interface Error {
 
 declare var Error: ErrorConstructor;
 
-export let captureStackTrace: (targetObject: any, constructorOpt?: any)=>void;
+export let captureStackTrace: (targetObject: any, constructorOpt?: any) => void;
 if (Error.captureStackTrace) {
   captureStackTrace = Error.captureStackTrace;
 } else {

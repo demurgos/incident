@@ -17,6 +17,7 @@ export declare class Incident extends Error {
         [key: string]: any;
     };
     Incident: Object;
+    static cast(obj: Incident | Error | any): Incident;
     constructor();
     constructor(simpleError: Error);
     constructor(message: string);
@@ -37,6 +38,5 @@ export declare class Incident extends Error {
     setMessage(message: string): Incident;
     setStack(message: string): Incident;
     toString(): any;
-    static cast: (obj: any) => Incident;
 }
 export default Incident;

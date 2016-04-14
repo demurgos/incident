@@ -1,1 +1,1 @@
-export { Incident } from '../core/incident';
+export { Incident } from "../core/incident";

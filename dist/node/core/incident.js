@@ -4,8 +4,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-var _ = require('lodash');
-var utils_1 = require('./utils');
+var _ = require("lodash");
+var utils_1 = require("./utils");
 var INCIDENT_NAME = "Incident";
 var Incident = (function (_super) {
     __extends(Incident, _super);
@@ -29,7 +29,7 @@ var Incident = (function (_super) {
             options.data = args[i++];
         }
         _super.call(this, options.message);
-        this.setMessage(options.message || '');
+        this.setMessage(options.message || "");
         this.setCause(options.cause || null);
         var name;
         if (options.name) {
@@ -46,6 +46,17 @@ var Incident = (function (_super) {
         utils_1.captureStackTrace(this, this.constructor);
         // this.setStack('');
     }
+    Incident.cast = function (obj) {
+        if (obj instanceof Incident) {
+            return obj;
+        }
+        else if (obj instanceof Error) {
+            return new Incident(obj.name, obj.message);
+        }
+        else {
+            return new Incident();
+        }
+    };
     Incident.prototype.setCause = function (cause) {
         if (cause instanceof Error) {
             this.cause = cause;
@@ -76,17 +87,6 @@ var Incident = (function (_super) {
     };
     Incident.prototype.toString = function () {
         return Error.toString.apply(this, arguments);
-    };
-    Incident.cast = function (obj) {
-        if (obj instanceof Incident) {
-            return obj;
-        }
-        else if (obj instanceof Error) {
-            return new Incident(obj.name, obj.message);
-        }
-        else {
-            return new Incident();
-        }
     };
     return Incident;
 }(Error));

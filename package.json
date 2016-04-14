@@ -1,14 +1,15 @@
 {
   "name": "incident",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Simple custom errors.",
   "main": "dist/node/node/main.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/demurgos/incident.git"
+    "url": "git://github.com/Demurgos/incident.git"
   },
   "scripts": {
-    "test": "gulp test"
+    "test": "gulp test",
+    "postinstall": "gulp install.noNpm"
   },
   "keywords": [
     "error"
