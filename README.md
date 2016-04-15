@@ -19,5 +19,23 @@ Planned features:
 ## Usage ##
 
 ````javascript
-let err = new Incident(reason, name, data, message);
+let err;
+
+err =  new Incident();
+err = new Incident(message);
+err = new Incident(name, message);
+err = new Incident(name, data, message);
+err = new Incident(cause, message);
+err = new Incident(cause, name, message);
+err = new Incident(cause, name, data, message);
+````
+
+````typescript
+interface Incident {
+  cause: Error;
+  name: string;
+  data: {[key: string]: any};
+  message: string;
+  stack: string;
+}
 ````
