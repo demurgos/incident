@@ -7,6 +7,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 var _ = require("lodash");
 var utils_1 = require("./utils");
 var INCIDENT_NAME = "Incident";
+var dummyError = new Error();
 var Incident = (function (_super) {
     __extends(Incident, _super);
     function Incident() {
@@ -86,7 +87,7 @@ var Incident = (function (_super) {
         return this;
     };
     Incident.prototype.toString = function () {
-        return Error.toString.apply(this, arguments);
+        return dummyError.toString.apply(this, arguments);
     };
     return Incident;
 }(Error));

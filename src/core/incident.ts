@@ -12,6 +12,8 @@ export interface IncidentConstructorOptions {
   data?: {[key: string]: any};
 }
 
+let dummyError = new Error();
+
 export class Incident extends Error {
   stack: string;
   name: string;
@@ -112,7 +114,7 @@ export class Incident extends Error {
   }
 
   toString() {
-    return Error.toString.apply(this, arguments);
+    return dummyError.toString.apply(this, arguments);
   }
 }
 
