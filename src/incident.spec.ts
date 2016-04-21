@@ -96,4 +96,14 @@ describe("Incident constructors", function () {
       message: "Unable to connect"
     });
   });
+
+  it("new Incident(data, message)", function(){
+    let incident = new Incident({foo: "bar"}, "Foo/Bar");
+    matchError(incident, {
+      cause: null,
+      name: (<any> Incident).name,
+      data: {foo: "bar"},
+      message: "Foo/Bar"
+    });
+  });
 });

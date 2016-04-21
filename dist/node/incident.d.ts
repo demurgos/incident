@@ -27,6 +27,9 @@ export declare class Incident extends Error {
     constructor(name: string, data: {
         [key: string]: any;
     }, message: string);
+    constructor(data: {
+        [key: string]: any;
+    }, message: string);
     constructor(cause: Error, name: string, data: {
         [key: string]: any;
     }, message: string);

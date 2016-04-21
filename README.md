@@ -5,7 +5,7 @@ Simple custom errors
 Features:
 
 
-* Drop-in for `Error`: __fully compatible with `Error`__ (both in Node and the browser)
+* Drop-in replacement for `Error`: __fully compatible with `Error`__ (both in Node and the browser)
 * Based on native `Error`s, support for `instanceof Error`
 * Easy name and data association for automated error handling
 * Track error causes (simple chain or multiple reasons)
@@ -46,6 +46,7 @@ err = new Incident(name, data, message);
 err = new Incident(cause, message);
 err = new Incident(cause, name, message);
 err = new Incident(cause, name, data, message);
+err = new Incident(data, message);
 ````
 
 ````typescript
