@@ -5,23 +5,25 @@ interface ErrorConstructor {
   captureStackTrace?: (targetObject: any, constructorOpt?: any) => void;
 }
 
-interface Error {
+export interface Error {
   stack: string;
 }
 
-declare var Error: ErrorConstructor;
+declare const Error: ErrorConstructor;
 
-export let captureStackTrace: (targetObject: any, constructorOpt?: any) => void;
+export let captureStackTrace: (targetObject: Error, constructorOpt?: any) => void;
+
 if (Error.captureStackTrace) {
   captureStackTrace = Error.captureStackTrace;
 } else {
-  captureStackTrace = function captureStackTrace(error, ctr) {
-    let container = new Error();
+  captureStackTrace = function captureStackTrace(error: Error, ctr) {
+    const stackContainer: Error = new Error();
 
+    // tslint:disable:no-invalid-this
     Object.defineProperty(error, "stack", {
       configurable: true,
-      get: function getStack() {
-        let stack = container.stack;
+      get: function getStack(this: Error): string {
+        const stack: string = stackContainer.stack;
 
         // Replace property with value for faster future accesses.
         Object.defineProperty(this, "stack", {
@@ -30,7 +32,7 @@ if (Error.captureStackTrace) {
 
         return stack;
       },
-      set: function setStack(stack) {
+      set: function setStack(this: Error, stack: string): void {
         Object.defineProperty(error, "stack", {
           configurable: true,
           value: stack,
