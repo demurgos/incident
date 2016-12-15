@@ -2,6 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/incident.svg?maxAge=2592000)](https://www.npmjs.com/package/incident)
 [![Build status](https://img.shields.io/travis/demurgos/incident/master.svg?maxAge=2592000)](https://travis-ci.org/demurgos/incident)
+[![GitHub repository](https://img.shields.io/badge/Github-demurgos%2Fincident-blue.svg)](https://github.com/demurgos/incident)
 
 Simple errors
 
@@ -60,3 +61,7 @@ interface Incident<D extends {}> {
   stack: string;
 }
 ```
+
+## License
+
+[MIT License](./LICENSE.md)
