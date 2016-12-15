@@ -1,14 +1,15 @@
 {
   "name": "incident",
   "version": "1.0.7",
-  "description": "Simple custom errors.",
-  "main": "dist/node/incident.js",
+  "description": "Simple errors",
+  "main": "dist/lib/lib/incident.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/Demurgos/incident.git"
+    "url": "git://github.com/demurgos/incident.git"
   },
   "scripts": {
-    "test": "gulp test"
+    "test": "gulp :lint && gulp lib-test:clean && gulp lib-test",
+    "prepublishOnly": "npm test && gulp lib:dist"
   },
   "keywords": [
     "error"
