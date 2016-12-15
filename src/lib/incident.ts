@@ -1,29 +1,38 @@
-import * as _ from "lodash";
+/* tslint:disable:no-angle-bracket-type-assertion */
+
 import {captureStackTrace} from "./utils";
 
 const INCIDENT_NAME: string = "Incident";
 
-export interface IncidentConstructorOptions {
+export interface IncidentConstructorOptions<D> {
   stack?: string;
   name?: string;
   message?: string;
   formater?: any;
   cause?: Error;
-  data?: {[key: string]: any};
+  data?: D;
 }
 
-let dummyError = new Error();
+/**
+ * Used to stringify Incident errors.
+ */
+const dummyError: Error = new Error();
 
-export class Incident extends Error {
+export class Incident<D extends {}> extends Error {
   stack: string;
   name: string;
   message: string;
-  cause: Error;
-  data: {[key: string]: any};
+  cause: Error | null;
+  data: D;
 
-  Incident: Object; // reference to the root Incident class for compatibility between various Incident definitions.
+  // reference to the root Incident class for compatibility between duplicated Incident modules
+  // tslint:disable:variable-name
+  Incident: typeof Incident;
 
-  static cast (obj: Incident|Error|any): Incident {
+  static cast<D>(obj: Incident<D>): Incident<D>;
+  static cast<D extends {}>(obj: Error | any): Incident<D>;
+
+  static cast(obj: any): any {
     if (obj instanceof Incident) {
       return obj;
     } else if (obj instanceof Error) {
@@ -39,25 +48,26 @@ export class Incident extends Error {
   constructor(cause: Error, message: string);
   constructor(name: string, message: string);
   constructor(cause: Error, name: string, message: string);
-  constructor(name: string, data: {[key: string]: any}, message: string);
-  constructor(data: {[key: string]: any}, message: string);
-  constructor(cause: Error, name: string, data: {[key: string]: any}, message: string);
+  constructor(name: string, data: D, message: string);
+  constructor(data: D, message: string);
+  constructor(cause: Error, name: string, data: D, message: string);
 
   constructor(...args: any[]) {
-    let options: IncidentConstructorOptions = {};
-    let i = 0, l = args.length;
+    const options: IncidentConstructorOptions<D> = {};
+    let argIndex: number = 0;
+    let argsLen: number = args.length;
 
-    if (l > 0) {
-      options.message = args[--l];
+    if (argsLen > 0) {
+      options.message = args[--argsLen];
     }
-    if (i < l && args[i] instanceof Error) {
-      options.cause = args[i++];
+    if (argIndex < argsLen && args[argIndex] instanceof Error) {
+      options.cause = args[argIndex++];
     }
-    if (i < l && _.isString(args[i])) {
-      options.name = args[i++];
+    if (argIndex < argsLen && typeof args[argIndex] === "string") {
+      options.name = args[argIndex++];
     }
-    if (i < l && _.isObject(args[i])) {
-      options.data = args[i++];
+    if (argIndex < argsLen && typeof args[argIndex] === "object") {
+      options.data = args[argIndex++];
     }
 
     super(options.message);
@@ -75,41 +85,39 @@ export class Incident extends Error {
     }
 
     this.setName(name);
-    this.setData(options.data || {});
+    this.setData(options.data || <D> {});
 
     captureStackTrace(this, this.constructor);
-
-    // this.setStack('');
   }
 
-  setCause(cause: Error): Incident {
+  setCause(cause: Error | null): this {
     if (cause instanceof Error) {
       this.cause = cause;
     } else {
       if (cause !== null) {
-        console.warn("Incident expects cause to be an Error or array of Errors");
+        throw new TypeError("`Incident.setCause` expected `cause` to be of type: `Error | null`");
       }
       this.cause = null;
     }
     return this;
   }
 
-  setName(name: string): Incident {
+  setName(name: string): this {
     this.name = name;
     return this;
   }
 
-  setData(data: {[key: string]: any}): Incident {
+  setData(data: D): this {
     this.data = data;
     return this;
   }
 
-  setMessage(message: string): Incident {
+  setMessage(message: string): this {
     this.message = message;
     return this;
   }
 
-  setStack(message: string): Incident {
+  setStack(message: string): this {
     this.stack = message;
     return this;
   }
