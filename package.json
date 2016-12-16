@@ -1,6 +1,6 @@
 {
   "name": "incident",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Simple errors",
   "main": "dist/lib/lib/incident.js",
   "types": "dist/lib/lib/incident.d.ts",
