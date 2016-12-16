@@ -6,6 +6,6 @@ notifications:
 node_js:
 - stable
 before_install:
-- npm install -g typings gulp && typings install
+- npm install -g typings gulp-cli
 script:
 - npm test
