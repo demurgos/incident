@@ -9,9 +9,12 @@
     "url": "git://github.com/demurgos/incident.git"
   },
   "scripts": {
-    "prepare": "typings install",
-    "test": "gulp :lint && gulp lib-test:clean && gulp lib-test",
-    "prepublishOnly": "npm test && gulp lib:dist"
+    "prepare": "typings install && gulp all:tsconfig.json && gulp :tslint.json && gulp all:dist",
+    "test": "gulp :lint && gulp lib-test",
+    "prepublishOnly": "npm test",
+    ":lint": "gulp :lint",
+    "typedoc": "typedoc --includeDeclarations --out docs/api --module commonjs --target es2015 --exclude '**/*.spec.ts' --mode modules --name Incident --readme README.md src/lib/",
+    "gh-pages": "rm -rf build/gh-pages/ && typedoc --includeDeclarations --out build/gh-pages/ --module commonjs --target es2015 --exclude '**/*.spec.ts' --mode modules --name Incident --readme README.md src/lib/ && touch build/gh-pages/.nojekyll && cp -r build/gh-pages/. dist/gh-pages/"
   },
   "keywords": [
     "error"
@@ -20,7 +23,7 @@
   "license": "MIT",
   "devDependencies": {
     "chai": "^3.5.0",
-    "demurgos-web-build-tools": "0.13.0-alpha.0",
+    "demurgos-web-build-tools": "0.13.0-beta.5",
     "gulp": "github:gulpjs/gulp#4.0",
     "typescript": "^2.1.4"
   }
