@@ -1,5 +1,8 @@
 # Next
 
+- Minor: Support lazy messages. You can now pass a formatter of type `(D) => string`
+  instead of a `string` for the message. It will be called only if the error
+  is actually thrown or you read the message.
 - Internal: Update the build-tools from `0.13.0-alpha.0` to `0.13.0-beta.5`
 - Internal: Drop dev-dependency on `typings`
 - Internal: Run the tests before each commit

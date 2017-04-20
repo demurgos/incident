@@ -63,6 +63,7 @@ export interface StaticInterface extends Function {
 function createIncident(_super: Function): StaticInterface {
 
   Object.setPrototypeOf(Incident, _super);
+
   function __(this: typeof __): void {
     this.constructor = Incident;
   }
