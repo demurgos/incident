@@ -1,10 +1,6 @@
-import {captureStackTrace, lazyCaptureStackTrace} from "./utils";
 import isExtensible = Reflect.isExtensible;
 
-const INCIDENT_NAME: string = "Incident";
-
 export interface IncidentConstructorOptions<D> {
-  stack?: string;
   name?: string;
   message?: string | ((data: D) => string);
   cause?: Error;
@@ -15,6 +11,11 @@ export interface IncidentConstructorOptions<D> {
  * Used to stringify Incident errors.
  */
 const dummyError: Error = new Error();
+
+/**
+ * A symbol used internally to not capture the stack.
+ */
+const noStackSymbol: Object = {};
 
 export interface Interface<D extends {}> extends Error {
   stack: string;
@@ -34,6 +35,8 @@ export interface Interface<D extends {}> extends Error {
 
 interface PrivateInterface<D extends {}> extends Interface<D> {
   _message: string | ((data: D) => string);
+  _stack?: string;
+  _stackContainer?: Error;
 }
 
 export interface StaticInterface extends Function {
@@ -75,21 +78,22 @@ function createIncident(_super: Function): StaticInterface {
     if (!(this instanceof Incident)) {
       switch (args.length) {
         case 0:
-          return new (<any> Incident as StaticInterface)<D>();
+          return new (<any> Incident)(noStackSymbol);
         case 1:
-          return new (<any> Incident as StaticInterface)<D>(args[0]);
+          return new (<any> Incident)(noStackSymbol, args[0]);
         case 2:
-          return new (<any> Incident as StaticInterface)<D>(args[0], args[1]);
+          return new (<any> Incident)(noStackSymbol, args[0], args[1]);
         case 3:
-          return new (<any> Incident as StaticInterface)<D>(args[0], args[1], args[2]);
+          return new (<any> Incident)(noStackSymbol, args[0], args[1], args[2]);
         default:
-          return new (<any> Incident as StaticInterface)<D>(args[0], args[1], args[2], args[3]);
+          return new (<any> Incident)(noStackSymbol, args[0], args[1], args[2], args[3]);
       }
     }
 
     const options: IncidentConstructorOptions<D> = {};
-    let argIndex: number = 0;
     let argsLen: number = args.length;
+    const noStack: boolean = argsLen > 0 && args[0] === noStackSymbol;
+    let argIndex: number = noStack ? 1 : 0;
 
     if (argsLen > 0) {
       options.message = args[--argsLen];
@@ -108,9 +112,8 @@ function createIncident(_super: Function): StaticInterface {
 
     const message: string | ((data: D) => string) = options.message === undefined ? "" : options.message;
 
-    _super.call(this, typeof message === "function" ? "<lazyMessage>" : message);
+    _super.call(this, typeof message === "function" ? "<lazyMessage was not evaluated>" : message);
 
-    this.setMessage(message);
     this.setCause(options.cause || null);
 
     let name: string;
@@ -119,14 +122,32 @@ function createIncident(_super: Function): StaticInterface {
     } else if (this.constructor && (<{name?: string}> <any> this.constructor).name) {
       name = (<{name: string}> <any> this.constructor).name;
     } else {
-      name = INCIDENT_NAME;
+      name = "Incident";
     }
 
     this.setName(name);
     this.setData(options.data || <D> {});
 
-    // captureStackTrace(this, this.constructor);
-    lazyCaptureStackTrace(this, this.constructor);
+    Object.defineProperty(this, "_message", {
+      value: message,
+      writable: true,
+      enumerable: false,
+      configurable: true
+    });
+
+    Object.defineProperty(this, "_stack", {
+      value: undefined,
+      writable: true,
+      enumerable: false,
+      configurable: true
+    });
+
+    Object.defineProperty(this, "_stackContainer", {
+      value: noStack ? undefined : new Error(),
+      writable: true,
+      enumerable: false,
+      configurable: true
+    });
   }
 
   (<any> Incident as StaticInterface).cast = function (obj: any): any {
@@ -196,6 +217,11 @@ function createIncident(_super: Function): StaticInterface {
     if (typeof this._message === "function") {
       this._message = this._message(this.data);
     }
+    Object.defineProperty(this, "message", {
+      configurable: true,
+      value: this._message,
+      writable: true
+    });
     return this._message;
   }
 
@@ -206,9 +232,44 @@ function createIncident(_super: Function): StaticInterface {
     this._message = message;
   }
 
+  function getStack(this: PrivateInterface<{}>): string {
+    if (this._stack === undefined) {
+      if (this._stackContainer !== undefined && this._stackContainer.stack !== undefined) {
+        // Remove "Error\n    at new Incident..."
+        const stack: string = this._stackContainer.stack.replace(/^[^\n]+\n[^\n]+\n/, "");
+        this._stack = `${this.name}: ${this._message}\n${stack}`;
+      } else {
+        this._stack = `${this.name}: ${this._message}`;
+      }
+      if (this.cause !== null && this.cause.stack !== undefined) {
+        this._stack = `${this._stack}\n  caused by ${this.cause.stack}`;
+      }
+    }
+    Object.defineProperty(this, "message", {
+      configurable: true,
+      value: this._stack,
+      writable: true
+    });
+    return this._stack;
+  }
+
+  function setStack(this: PrivateInterface<{}>, stack: string): void {
+    this._stackContainer = undefined;
+    this._stack = stack;
+  }
+
+  const stackContainer: Error = new Error();
+
   Object.defineProperty(Incident.prototype, "message", {
     get: getMessage,
     set: setMessage,
+    enumerable: true,
+    configurable: true
+  });
+
+  Object.defineProperty(Incident.prototype, "stack", {
+    get: getStack,
+    set: setStack,
     enumerable: true,
     configurable: true
   });
