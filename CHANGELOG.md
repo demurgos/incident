@@ -2,6 +2,7 @@
 
 - Internal: Update the build-tools from `0.13.0-alpha.0` to `0.13.0-beta.5`
 - Internal: Drop dev-dependency on `typings`
+- Internal: Run the tests before each commit
 
 # 1.1.1
 
