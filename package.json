@@ -1,9 +1,10 @@
 {
   "name": "incident",
   "version": "1.2.0",
-  "description": "Simple errors",
-  "main": "dist/lib/lib/incident.js",
-  "types": "dist/lib/lib/incident.d.ts",
+  "description": "Simple powerful errors",
+  "main": "dist/lib-es2015/lib/index.js",
+  "types": "dist/lib-es2015/lib/index.d.ts",
+  "browser": "dist/lib-es5/lib/index.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/demurgos/incident.git"
