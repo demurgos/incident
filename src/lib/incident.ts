@@ -1,10 +1,33 @@
-import isExtensible = Reflect.isExtensible;
+/**
+ * Define a hidden property
+ *
+ * @param obj
+ * @param propertyName
+ * @param value
+ */
+function defineHiddenProperty(obj: {}, propertyName: string, value: any) {
+  Object.defineProperty(obj, propertyName, {
+    value: value,
+    configurable: true,
+    enumerable: false,
+    writable: true
+  });
+}
 
-export interface IncidentConstructorOptions<D> {
-  name?: string;
-  message?: string | ((data: D) => string);
-  cause?: Error;
-  data?: D;
+/**
+ * Define a simple property
+ *
+ * @param obj
+ * @param propertyName
+ * @param value
+ */
+function defineSimpleProperty(obj: {}, propertyName: string, value: any) {
+  Object.defineProperty(obj, propertyName, {
+    value: value,
+    configurable: true,
+    enumerable: true,
+    writable: true
+  });
 }
 
 /**
@@ -17,48 +40,57 @@ const dummyError: Error = new Error();
  */
 const noStackSymbol: Object = {};
 
-export interface Interface<D extends {}> extends Error {
-  stack: string;
-  name: string;
-  cause: Error | null;
-  data: D;
+export interface InterfaceAttributes<Name extends string, Data extends {}, Cause extends (Error | undefined)> {
   message: string;
-  Incident: StaticInterface;
+  name: Name;
+  data: Data;
+  cause: Cause;
+  stack: string;
+}
 
-  setCause(cause: Error | null): this;
-  setName(name: string): this;
-  setData(data: D): this;
-  setMessage(message: string | ((data: D) => string)): this;
-  setStack(message: string): this;
+export interface Interface<Name extends string, Data extends {}, Cause extends (Error | undefined)>
+  extends Error, InterfaceAttributes<Name, Data, Cause> {
+  name: Name;
+  stack: string;
+
   toString(): string;
 }
 
-interface PrivateInterface<D extends {}> extends Interface<D> {
+interface PrivateInterface<N extends string, D extends {}, C extends (Error | undefined)> extends Interface<N, D, C> {
   _message: string | ((data: D) => string);
   _stack?: string;
   _stackContainer?: Error;
 }
 
 export interface StaticInterface extends Function {
-  new<D extends {}>(): Interface<D>;
-  new<D extends {}>(simpleError: Error): Interface<D>;
-  new<D extends {}>(message: string): Interface<D>;
-  new<D extends {}>(name: string, message: string): Interface<D>;
-  new<D extends {}>(name: string, lazyMessage: ((data: D) => string)): Interface<D>;
-  new<D extends {}>(name: string, data: D, message: string): Interface<D>;
-  new<D extends {}>(name: string, data: D, lazyMessage: ((data: D) => string)): Interface<D>;
-  new<D extends {}>(lazyMessage: ((data: D) => string)): Interface<D>;
-  new<D extends {}>(data: D, message: string): Interface<D>;
-  new<D extends {}>(data: D, lazyMessage: ((data: D) => string)): Interface<D>;
-  new<D extends {}>(cause: Error, message: string): Interface<D>;
-  new<D extends {}>(cause: Error, lazyMessage: ((data: D) => string)): Interface<D>;
-  new<D extends {}>(cause: Error, name: string, message: string): Interface<D>;
-  new<D extends {}>(cause: Error, name: string, lazyMessage: ((data: D) => string)): Interface<D>;
-  new<D extends {}>(cause: Error, name: string, data: D, message: string): Interface<D>;
-  new<D extends {}>(cause: Error, name: string, data: D, lazyMessage: ((data: D) => string)): Interface<D>;
+  new(): Interface<"Incident", {}, undefined>;
+  new(message: string): Interface<"Incident", {}, undefined>;
+  new<N extends string>(name: N, message: string): Interface<N, {}, undefined>;
+  new<N extends string>(name: N, lazyMessage: ((data: {}) => string)): Interface<N, {}, undefined>;
+  new<N extends string, D extends {}>(name: N, data: D, message: string): Interface<N, D, undefined>;
+  new<N extends string, D extends {}>(name: N, data: D, lazyMessage: ((data: D) => string)): Interface<N, D, undefined>;
+  new(lazyMessage: ((data: {}) => string)): Interface<"Incident", {}, undefined>;
+  new<C extends Error>(cause: C): Interface<"Incident", {}, C>;
+  new<C extends Error>(cause: C, message: string): Interface<"Incident", {}, C>;
+  new<C extends Error>(cause: C, lazyMessage: ((data: {}) => string)): Interface<"Incident", {}, C>;
+  new<D extends {}>(data: D, message: string): Interface<"Incident", D, undefined>;
+  new<D extends {}>(data: D, lazyMessage: ((data: D) => string)): Interface<"Incident", D, undefined>;
+  new<N extends string, C extends Error>(cause: C, name: N, message: string): Interface<N, {}, C>;
+  new<N extends string, C extends Error>(cause: C, name: N, lazyMessage: ((data: {}) => string)): Interface<N, {}, C>;
+  new<N extends string, D extends {}, C extends Error>(cause: C, name: N, data: D, message: string): Interface<N, D, C>;
+  new<N extends string, D extends {}, C extends Error> (
+    cause: C,
+    name: N,
+    data: D,
+    lazyMessage: ((data: D) => string)
+  ): Interface<N, D, C>;
+}
 
-  cast<D extends {}>(obj: Interface<D>): Interface<D>;
-  cast<D extends {}>(obj: Error | any): Interface<D>;
+export interface IncidentConstructorOptions<D> {
+  name?: string;
+  message?: string | ((data: D) => string);
+  cause?: Error;
+  data?: D;
 }
 
 // Incident factory, allows a fine control over the getter / setters
@@ -74,7 +106,10 @@ function createIncident(_super: Function): StaticInterface {
   __.prototype = _super.prototype;
   Incident.prototype = new (<any> __)();
 
-  function Incident<D extends {}>(this: PrivateInterface<D>, ...args: any[]): Incident<D> | void {
+  function Incident<N extends string, D extends {}, C extends (Error | undefined)>(
+    this: PrivateInterface<N, D, C>,
+    ...args: any[]
+  ): Incident<N, D, C> | void {
     if (!(this instanceof Incident)) {
       switch (args.length) {
         case 0:
@@ -90,149 +125,63 @@ function createIncident(_super: Function): StaticInterface {
       }
     }
 
+    let name: N = "Incident" as N;
+    let data: D = {} as D;
+    let cause: C | undefined = undefined;
+    let message: string | ((data: D) => string) = "";
+
     const options: IncidentConstructorOptions<D> = {};
     let argsLen: number = args.length;
     const noStack: boolean = argsLen > 0 && args[0] === noStackSymbol;
     let argIndex: number = noStack ? 1 : 0;
 
     if (argsLen > 0) {
-      options.message = args[--argsLen];
-    } else {
-      options.message = "";
+      message = args[--argsLen];
     }
     if (argIndex < argsLen && args[argIndex] instanceof Error) {
-      options.cause = args[argIndex++];
+      cause = args[argIndex++];
     }
     if (argIndex < argsLen && typeof args[argIndex] === "string") {
-      options.name = args[argIndex++];
+      name = args[argIndex++];
     }
     if (argIndex < argsLen && typeof args[argIndex] === "object") {
-      options.data = args[argIndex++];
+      data = args[argIndex++];
     }
-
-    const message: string | ((data: D) => string) = options.message === undefined ? "" : options.message;
 
     _super.call(this, typeof message === "function" ? "<lazyMessage was not evaluated>" : message);
 
-    this.setCause(options.cause || null);
-
-    let name: string;
-    if (options.name) {
-      name = options.name;
-    } else if (this.constructor && (<{name?: string}> <any> this.constructor).name) {
-      name = (<{name: string}> <any> this.constructor).name;
-    } else {
-      name = "Incident";
+    this.name = name;
+    defineHiddenProperty(this, "_message", message);
+    this.data = data;
+    if (cause !== undefined) {
+      this.cause = cause;
     }
-
-    this.setName(name);
-    this.setData(options.data || <D> {});
-
-    Object.defineProperty(this, "_message", {
-      value: message,
-      writable: true,
-      enumerable: false,
-      configurable: true
-    });
-
-    Object.defineProperty(this, "_stack", {
-      value: undefined,
-      writable: true,
-      enumerable: false,
-      configurable: true
-    });
-
-    Object.defineProperty(this, "_stackContainer", {
-      value: noStack ? undefined : new Error(),
-      writable: true,
-      enumerable: false,
-      configurable: true
-    });
+    defineHiddenProperty(this, "_stack", undefined);
+    defineHiddenProperty(this, "_stackContainer", noStack ? undefined : new Error());
   }
-
-  (<any> Incident as StaticInterface).cast = function (obj: any): any {
-    if (obj instanceof Incident) {
-      return obj;
-    } else if (obj instanceof Error) {
-      return new (<any> Incident as StaticInterface)(obj.name, obj.message);
-    } else {
-      return new (<any> Incident as StaticInterface)();
-    }
-  };
 
   Incident.prototype.Incident = Incident;
 
-  Incident.prototype.setCause = function <This extends PrivateInterface<{}>>(
-    this: This,
-    cause: Error | null
-  ): This {
-    if (cause instanceof Error) {
-      this.cause = cause;
-    } else {
-      if (cause !== null) {
-        throw new TypeError("`Incident.setCause` expected `cause` to be of type: `Error | null`");
-      }
-      this.cause = null;
-    }
-    return this;
-  };
-
-  Incident.prototype.setName = function <This extends PrivateInterface<{}>>(
-    this: This,
-    name: string
-  ): This {
-    this.name = name;
-    return this;
-  };
-
-  Incident.prototype.setData = function <D extends {}, This extends PrivateInterface<D>>(
-    this: This,
-    data: D
-  ): This {
-    this.data = data;
-    return this;
-  };
-
-  Incident.prototype.setMessage = function <D extends {}, This extends PrivateInterface<D>>(
-    this: This,
-    message: string | ((data: D) => string)
-  ): This {
-    this._message = message;
-    return this;
-  };
-
-  Incident.prototype.setStack = function <This extends PrivateInterface<{}>>(
-    this: This,
-    stack: string
-  ): This {
-    this.stack = stack;
-    return this;
-  };
-
-  Incident.prototype.toString = function (this: PrivateInterface<{}>): string {
+  Incident.prototype.toString = function (this: PrivateInterface<string, {}, Error | undefined>): string {
     return dummyError.toString.apply(this, arguments);
   };
 
-  function getMessage<D extends {}, This extends PrivateInterface<D>>(this: This): string {
+  function getMessage(this: PrivateInterface<string, {}, Error | undefined>): string {
     if (typeof this._message === "function") {
       this._message = this._message(this.data);
     }
-    Object.defineProperty(this, "message", {
-      configurable: true,
-      value: this._message,
-      writable: true
-    });
+    defineSimpleProperty(this, "message", this._message);
     return this._message;
   }
 
-  function setMessage<D extends {}, This extends PrivateInterface<D>>(
-    this: This,
+  function setMessage<D extends {}>(
+    this: PrivateInterface<string, D, Error | undefined>,
     message: string | ((data: D) => string)
   ): void {
     this._message = message;
   }
 
-  function getStack(this: PrivateInterface<{}>): string {
+  function getStack(this: PrivateInterface<string, {}, Error | undefined>): string {
     if (this._stack === undefined) {
       if (this._stackContainer !== undefined && this._stackContainer.stack !== undefined) {
         // Remove "Error\n    at new Incident..."
@@ -241,7 +190,7 @@ function createIncident(_super: Function): StaticInterface {
       } else {
         this._stack = `${this.name}: ${this._message}`;
       }
-      if (this.cause !== null && this.cause.stack !== undefined) {
+      if (this.cause !== undefined && this.cause.stack !== undefined) {
         this._stack = `${this._stack}\n  caused by ${this.cause.stack}`;
       }
     }
@@ -253,12 +202,10 @@ function createIncident(_super: Function): StaticInterface {
     return this._stack;
   }
 
-  function setStack(this: PrivateInterface<{}>, stack: string): void {
+  function setStack(this: PrivateInterface<string, {}, Error | undefined>, stack: string): void {
     this._stackContainer = undefined;
     this._stack = stack;
   }
-
-  const stackContainer: Error = new Error();
 
   Object.defineProperty(Incident.prototype, "message", {
     get: getMessage,
@@ -279,7 +226,8 @@ function createIncident(_super: Function): StaticInterface {
 
 /* tslint:disable-next-line:variable-name */
 export const Incident: StaticInterface = createIncident(Error);
-export interface Incident<D extends {}> extends Interface<D> {
+export interface Incident<Name extends string, Data extends {}, Cause extends (Error | undefined)>
+  extends Interface<Name, Data, Cause> {
 }
 
 export default Incident;

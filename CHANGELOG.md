@@ -1,3 +1,11 @@
+# Next
+
+- Major: Use the Incident name as a discriminant for the data and cause.
+  This changes the signature from `Incident<Data>` to `Incident<Name, Data, Cause>`
+- Major: Remove the setter methods: `setName`, `setMessage`, `setCause`, `setData`.
+  Use a simple assignation instead.
+- Major: A missing cause is now represented by `undefined` instead of `null`.
+
 # 1.2.1
 
 - Patch: Fix library path in _package.json_

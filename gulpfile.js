@@ -23,7 +23,7 @@ const libTarget = Object.assign(
       compilerOptions: {
         skipLibCheck: true,
         target: "es2015",
-        lib: ["es2015", "dom"]
+        lib: ["es2015"]
       },
       typescript: typescript,
       tsconfigJson: ["lib/tsconfig.json"]
@@ -59,7 +59,8 @@ const libTestTarget = Object.assign(
     typescript: {
       compilerOptions: {
         skipLibCheck: true,
-        target: "es2015"
+        target: "es2015",
+        lib: ["es2015"]
       },
       typescript: typescript,
       tsconfigJson: ["test/tsconfig.json"]

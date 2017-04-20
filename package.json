@@ -34,6 +34,6 @@
     "demurgos-web-build-tools": "0.13.0-beta.5",
     "gulp": "github:gulpjs/gulp#4.0",
     "pre-commit": "^1.2.2",
-    "typescript": "^2.1.4"
+    "typescript": "^2.3.0-dev.20170420"
   }
 }
