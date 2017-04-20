@@ -334,12 +334,8 @@ describe("Discriminated union", function () {
 
   it("should compile a discriminated Incident", function () {
     {
-      interface SyntaxError extends Incident<"SyntaxError", {index: number}, undefined> {
-      }
-
-      interface TypeError extends Incident<"TypeError", {typeName: string}, undefined> {
-      }
-
+      type SyntaxError = Incident<"SyntaxError", {index: number}, undefined>;
+      type TypeError = Incident<"TypeError", {typeName: string}, undefined>;
       type BaseError = SyntaxError | TypeError;
 
       function printError(error: BaseError): void {
