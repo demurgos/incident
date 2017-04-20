@@ -1,7 +1,7 @@
 /* tslint:disable:no-angle-bracket-type-assertion */
 
 import {assert} from "chai";
-import {Incident} from "./incident";
+import {Incident} from "../lib/incident";
 
 interface IncidentLike<D extends {}> {
   cause: Error | null;

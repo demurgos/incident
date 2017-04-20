@@ -15,7 +15,7 @@ Simple errors
 - Possibility to extends via standard JS inheritance to provide custom errors
 - built with TypeScript: type definition and ES6 builds available
 - Lazy stack-trace (so it does not slow down your app if you don't need it)
-- Unit-tested
+- Lazy message formatter
 
 ### Planned features
 
@@ -41,15 +41,23 @@ const cause: Error = new Error("Hi, I'm a cause");
 const name: string = "incident:demo-error";
 const data: any = {much: "information", such: "data", wow: "!"};
 const message: string = "Don't worry, it's just a demo error";
+const lazyMessage: (data: any) => string = (data: any) => {JSON.stringify(data)};
 
 err = new Incident();
 err = new Incident(message);
+err = new Incident(lazyMessage);
 err = new Incident(name, message);
+err = new Incident(name, lazyMessage);
 err = new Incident(name, data, message);
+err = new Incident(name, data, lazyMessage);
 err = new Incident(cause, message);
+err = new Incident(cause, lazyMessage);
 err = new Incident(cause, name, message);
+err = new Incident(cause, name, lazyMessage);
 err = new Incident(cause, name, data, message);
+err = new Incident(cause, name, data, lazyMessage);
 err = new Incident(data, message);
+err = new Incident(data, lazyMessage);
 ```
 
 ```typescript
