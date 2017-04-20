@@ -1,6 +1,6 @@
 {
   "name": "incident",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Simple powerful errors",
   "main": "dist/lib-es2015/lib/incident.js",
   "types": "dist/lib-es2015/lib/incident.d.ts",
