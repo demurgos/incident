@@ -1,5 +1,6 @@
 # Next
 
+- Patch: Fix library path in _package.json_
 - Patch: Print error name and message in the stack traced. (Regression in 1.2.0)
 
 # 1.2.0
