@@ -3,32 +3,34 @@
 import {assert} from "chai";
 import {Incident} from "../lib/incident";
 
-interface IncidentLike<D extends {}> {
-  cause: Error | null;
-  name: string;
-  data: D;
+interface IncidentLike<N extends string, D extends {}, C extends (Error | undefined)> {
   message: string;
+  name: N;
+  data: D;
+  cause?: C;
+  stack?: string;
 }
 
-function assertEqualErrors<D>(subject: Incident<D>, reference: IncidentLike<D>): void {
-  for (const key in reference) {
-    assert.deepEqual((<any> subject)[key], (<any> reference)[key]);
+function assertEqualErrors<N extends string, D extends {}, C extends (Error | undefined)>(
+  actual: Incident<N, D, C>,
+  expected: IncidentLike<N, D, C>
+): void | never {
+  for (const key in expected) {
+    assert.deepEqual((<any> actual)[key], (<any> expected)[key], `for attribute ${key}`);
   }
 }
 
 describe("Incident", function () {
   it("should inherit from the native Error", function () {
-    const incident: Incident<{}> = new Incident();
+    const incident: Incident<"Incident", {}, undefined> = new Incident();
     assert.instanceOf(incident, Error);
   });
 });
 
 describe("Incident constructors", function () {
-
   it("new Incident()", function () {
-    const incident: Incident<{}> = new Incident();
+    const incident: Incident<"Incident", {}, undefined> = new Incident();
     assertEqualErrors(incident, {
-      cause: null,
       name: Incident.name,
       data: {},
       message: ""
@@ -36,9 +38,8 @@ describe("Incident constructors", function () {
   });
 
   it("new Incident(message)", function () {
-    const incident: Incident<{}> = new Incident("Unable to fire the reactor!");
+    const incident: Incident<"Incident", {}, undefined> = new Incident("Unable to fire the reactor!");
     assertEqualErrors(incident, {
-      cause: null,
       name: Incident.name,
       data: {},
       message: "Unable to fire the reactor!"
@@ -46,9 +47,8 @@ describe("Incident constructors", function () {
   });
 
   it("new Incident(lazyMessage)", function () {
-    const incident: Incident<{}> = new Incident(() => "Unable to fire the reactor!");
+    const incident: Incident<"Incident", {}, undefined> = new Incident(() => "Unable to fire the reactor!");
     assertEqualErrors(incident, {
-      cause: null,
       name: Incident.name,
       data: {},
       message: "Unable to fire the reactor!"
@@ -56,9 +56,8 @@ describe("Incident constructors", function () {
   });
 
   it("new Incident(name, message)", function () {
-    const incident: Incident<{}> = new Incident("paradoxError", "This is not an error");
+    const incident: Incident<"paradoxError", {}, undefined> = new Incident("paradoxError", "This is not an error");
     assertEqualErrors(incident, {
-      cause: null,
       name: "paradoxError",
       data: {},
       message: "This is not an error"
@@ -66,9 +65,9 @@ describe("Incident constructors", function () {
   });
 
   it("new Incident(name, lazyMessage)", function () {
-    const incident: Incident<{}> = new Incident("paradoxError", () => "This is not an error");
+    type ParadoxError = Incident<"paradoxError", {}, undefined>;
+    const incident: ParadoxError = new Incident("paradoxError", () => "This is not an error");
     assertEqualErrors(incident, {
-      cause: null,
       name: "paradoxError",
       data: {},
       message: "This is not an error"
@@ -77,13 +76,12 @@ describe("Incident constructors", function () {
 
   it("new Incident(name, data, message)", function () {
     const htmlRegex: RegExp = /<html>/;
-    const incident: Incident<{regex: RegExp}> = new Incident(
+    const incident: Incident<"regexError", {regex: RegExp}, undefined> = new Incident(
       "regexError",
       {regex: htmlRegex},
       "Now you have two errors"
     );
     assertEqualErrors(incident, {
-      cause: null,
       name: "regexError",
       data: {regex: htmlRegex},
       message: "Now you have two errors"
@@ -92,13 +90,12 @@ describe("Incident constructors", function () {
 
   it("new Incident(name, data, lazyMessage)", function () {
     const htmlRegex: RegExp = /<html>/;
-    const incident: Incident<{regex: RegExp}> = new Incident(
+    const incident: Incident<"regexError", {regex: RegExp}, undefined> = new Incident(
       "regexError",
       {regex: htmlRegex},
       () => "Now you have two errors"
     );
     assertEqualErrors(incident, {
-      cause: null,
       name: "regexError",
       data: {regex: htmlRegex},
       message: "Now you have two errors"
@@ -106,8 +103,9 @@ describe("Incident constructors", function () {
   });
 
   it("new Incident(cause, message)", function () {
-    const cause: Incident<{}> = new Incident("quantumError", "Causality not found");
-    const incident: Incident<{}> = new Incident(cause, "Unable to predict particle");
+    type Cause = Incident<"quantumError", {}, undefined>;
+    const cause: Cause = new Incident("quantumError", "Causality not found");
+    const incident: Incident<"Incident", {}, Cause> = new Incident(cause, "Unable to predict particle");
     assertEqualErrors(incident, {
       cause: cause,
       name: "Incident", // do not inherit name of cause
@@ -117,8 +115,9 @@ describe("Incident constructors", function () {
   });
 
   it("new Incident(cause, lazyMessage)", function () {
-    const cause: Incident<{}> = new Incident("quantumError", "Causality not found");
-    const incident: Incident<{}> = new Incident(cause, () => "Unable to predict particle");
+    type Cause = Incident<"quantumError", {}, undefined>;
+    const cause: Cause = new Incident("quantumError", "Causality not found");
+    const incident: Incident<"Incident", {}, Cause> = new Incident(cause, () => "Unable to predict particle");
     assertEqualErrors(incident, {
       cause: cause,
       name: "Incident", // do not inherit name of cause
@@ -128,8 +127,10 @@ describe("Incident constructors", function () {
   });
 
   it("new Incident(cause, name, message)", function () {
-    const cause: Incident<{}> = new Incident("hardwareError", "This is a hardware issue");
-    const incident: Incident<{}> = new Incident(cause, "lightBulbError", "Unable to change light bulb");
+    type Cause = Incident<"hardwareError", {}, undefined>;
+    const cause: Cause = new Incident("hardwareError", "This is a hardware issue");
+    type LightBultError = Incident<"lightBulbError", {}, Cause>;
+    const incident: LightBultError = new Incident(cause, "lightBulbError", "Unable to change light bulb");
     assertEqualErrors(incident, {
       cause: cause,
       name: "lightBulbError",
@@ -139,8 +140,13 @@ describe("Incident constructors", function () {
   });
 
   it("new Incident(cause, name, lazyMessage)", function () {
-    const cause: Incident<{}> = new Incident("hardwareError", "This is a hardware issue");
-    const incident: Incident<{}> = new Incident(cause, "lightBulbError", () => "Unable to change light bulb");
+    type Cause = Incident<"hardwareError", {}, undefined>;
+    const cause: Cause = new Incident("hardwareError", "This is a hardware issue");
+    const incident: Incident<"lightBulbError", {}, Cause> = new Incident(
+      cause,
+      "lightBulbError",
+      () => "Unable to change light bulb"
+    );
     assertEqualErrors(incident, {
       cause: cause,
       name: "lightBulbError",
@@ -150,8 +156,9 @@ describe("Incident constructors", function () {
   });
 
   it("new Incident(cause, name, data, message)", function () {
-    const cause: Incident<{}> = new Incident("lostConnectionError", "Lost connection");
-    const incident: Incident<{uri: string}> = new Incident(
+    type Cause = Incident<"lostConnectionError", {}, undefined>;
+    const cause: Cause = new Incident("lostConnectionError", "Lost connection");
+    const incident: Incident<"netError", {uri: string}, Cause> = new Incident(
       cause,
       "netError",
       {uri: "example.com"},
@@ -166,8 +173,9 @@ describe("Incident constructors", function () {
   });
 
   it("new Incident(cause, name, data, lazyMessage)", function () {
-    const cause: Incident<{}> = new Incident("lostConnectionError", "Lost connection");
-    const incident: Incident<{uri: string}> = new Incident(
+    type Cause = Incident<"lostConnectionError", {}, undefined>;
+    const cause: Cause = new Incident("lostConnectionError", "Lost connection");
+    const incident: Incident<"netError", {uri: string}, Cause> = new Incident(
       cause,
       "netError",
       {uri: "example.com"},
@@ -182,9 +190,8 @@ describe("Incident constructors", function () {
   });
 
   it("new Incident(data, message)", function () {
-    const incident: Incident<{foo: string}> = new Incident({foo: "bar"}, "Foo/Bar");
+    const incident: Incident<"Incident", {foo: string}, undefined> = new Incident({foo: "bar"}, "Foo/Bar");
     assertEqualErrors(incident, {
-      cause: null,
       name: Incident.name,
       data: {foo: "bar"},
       message: "Foo/Bar"
@@ -192,9 +199,8 @@ describe("Incident constructors", function () {
   });
 
   it("new Incident(data, lazyMessage)", function () {
-    const incident: Incident<{foo: string}> = new Incident({foo: "bar"}, () => "Foo/Bar");
+    const incident: Incident<"Incident", {foo: string}, undefined> = new Incident({foo: "bar"}, () => "Foo/Bar");
     assertEqualErrors(incident, {
-      cause: null,
       name: Incident.name,
       data: {foo: "bar"},
       message: "Foo/Bar"
@@ -205,9 +211,10 @@ describe("Incident constructors", function () {
 describe("Lazy message", function () {
   it("should call the formatter lazily on first read", function () {
     const callOrder: string[] = [];
+
     function exec() {
       callOrder.push("start-of-exec");
-      const incident: Incident<{}> = new Incident((): string => {
+      const incident: Incident<"Incident", {}, undefined> = new Incident((): string => {
         callOrder.push("message-evaluation");
         return "Lazy error";
       });
@@ -220,6 +227,7 @@ describe("Lazy message", function () {
       callOrder.push("after-read2");
       callOrder.push("end-of-exec");
     }
+
     exec();
     assert.deepEqual(callOrder, [
       "start-of-exec",
@@ -235,9 +243,10 @@ describe("Lazy message", function () {
 
   it("should call the formatter lazily on throw", function () {
     const callOrder: string[] = [];
+
     function exec() {
       callOrder.push("start-of-exec");
-      const incident: Incident<{}> = new Incident((): string => {
+      const incident: Incident<"Incident", {}, undefined> = new Incident((): string => {
         callOrder.push("message-evaluation");
         return "Lazy error";
       });
@@ -254,6 +263,7 @@ describe("Lazy message", function () {
       callOrder.push("after-throw2");
       callOrder.push("end-of-exec");
     }
+
     exec();
     assert.deepEqual(callOrder, [
       "start-of-exec",
@@ -265,5 +275,83 @@ describe("Lazy message", function () {
       "after-throw2",
       "end-of-exec"
     ]);
+  });
+});
+
+describe("Discriminated union", function () {
+  it("should compile an exemple with raw interfaces", function () {
+    {
+      interface SyntaxError {
+        name: "SyntaxError";
+        index: number;
+      }
+      interface TypeError {
+        name: "TypeError";
+        typeName: string;
+      }
+      type BaseError = SyntaxError | TypeError;
+
+      function printError(error: BaseError): void {
+        switch (error.name) {
+          case "SyntaxError":
+            const index: number = error.index;
+            break;
+          case "TypeError":
+            const typename: string = error.typeName;
+            break;
+        }
+      }
+    }
+  });
+
+  it("should compile an exemple with parametrized interfaces", function () {
+    {
+      interface ErrorInterface<N extends string, D extends {}> {
+        name: N;
+        data: D;
+      }
+
+      interface SyntaxError extends ErrorInterface<"SyntaxError", {index: number}> {
+      }
+
+      interface TypeError extends ErrorInterface<"TypeError", {typeName: string}> {
+      }
+
+      type BaseError = SyntaxError | TypeError;
+
+      function printError(error: BaseError): void {
+        switch (error.name) {
+          case "SyntaxError":
+            const index: number = error.data.index;
+            break;
+          case "TypeError":
+            const typename: string = error.data.typeName;
+            break;
+        }
+      }
+    }
+  });
+
+  it("should compile a discriminated Incident", function () {
+    {
+      interface SyntaxError extends Incident<"SyntaxError", {index: number}, undefined> {
+      }
+
+      interface TypeError extends Incident<"TypeError", {typeName: string}, undefined> {
+      }
+
+      type BaseError = SyntaxError | TypeError;
+
+      function printError(error: BaseError): void {
+        switch (error.name) {
+          case "SyntaxError":
+            const index: number = error.data.index;
+            break;
+          case "TypeError":
+            const typename: string = error.data.typeName;
+            break;
+        }
+      }
+    }
   });
 });
