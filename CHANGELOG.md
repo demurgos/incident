@@ -1,4 +1,4 @@
-# Next
+# 1.2.0
 
 - Minor: Support lazy messages. You can now pass a formatter of type `(D) => string`
   instead of a `string` for the message. It will be called only if the error
