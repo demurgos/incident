@@ -1,3 +1,7 @@
+# Next
+
+- Patch: Print error name and message in the stack traced. (Regression in 1.2.0)
+
 # 1.2.0
 
 - Minor: Support lazy messages. You can now pass a formatter of type `(D) => string`
