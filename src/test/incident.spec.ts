@@ -1,5 +1,3 @@
-/* tslint:disable:no-angle-bracket-type-assertion */
-
 import {assert} from "chai";
 import {Incident} from "../lib/incident";
 
@@ -16,7 +14,13 @@ function assertEqualErrors<N extends string, D extends {}, C extends (Error | un
   expected: IncidentLike<N, D, C>
 ): void | never {
   for (const key in expected) {
-    assert.deepEqual((<any> actual)[key], (<any> expected)[key], `for attribute ${key}`);
+    const actualProperty: any = (<any> actual)[key];
+    const expectedProperty: any = (<any> expected)[key];
+    assert.deepEqual(
+      actualProperty,
+      expectedProperty,
+      `Expected \`${actualProperty}\` to be \`${expectedProperty}\` for ${key}`
+    );
   }
 }
 
