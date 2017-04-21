@@ -2,9 +2,9 @@
   "name": "incident",
   "version": "1.2.1",
   "description": "Simple powerful errors",
-  "main": "dist/lib-es2015/lib/incident.js",
-  "types": "dist/lib-es2015/lib/incident.d.ts",
-  "browser": "dist/lib-es5/lib/incident.js",
+  "main": "dist/lib-es2015/lib/index.js",
+  "types": "dist/lib-es2015/lib/index.d.ts",
+  "browser": "dist/lib-es5/lib/index.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/demurgos/incident.git"
@@ -34,6 +34,6 @@
     "demurgos-web-build-tools": "0.13.0-beta.5",
     "gulp": "github:gulpjs/gulp#4.0",
     "pre-commit": "^1.2.2",
-    "typescript": "^2.3.0-dev.20170420"
+    "typescript": "^2.2.2"
   }
 }

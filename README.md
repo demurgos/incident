@@ -23,6 +23,7 @@ npm install --save incident
 - Compatible with prototypal inheritance and ES6 classe inheritance
 - Distributed with type definitions for Typescript
 - Lazy stack capture and support for lazy message formatter: never called if not needed
+- No dependencies
 
 ```typescript
 // Example of type resolution on a discriminated type
@@ -58,10 +59,9 @@ function printError(error: BaseError): void {
 ### Exports
 
 ```typescript
-interface Interface; // Incident interface
-interface StaticInterface; // New-able and callable, returns instances implementing Interface
-interface Incident; // Alias for Interface
-function Incident; // Implements StaticInterface
+function Incident; // The Incident constructor
+interface StaticIncident; // Interface of the constructor
+interface Incident; // Interface of the instance
 ```
 
 ### `Incident`
@@ -187,6 +187,8 @@ Incident. You can use it normalize simple errors to Incident or mitigate module
 duplication if you rely on `instanceof`. The resulting incident will have the
 same name, message, stack and data. If the input error was an Incident with
 a lazy message or stack, it will remain non-evaluated.
+If the argument is already an instance of the current `Incident`, a copy will be
+created. If you added extra properties, they will be lost.
 
 |cause|name |data |message| Comment                                                         |
 |:---:|:---:|:---:|:-----:|:----------------------------------------------------------------|

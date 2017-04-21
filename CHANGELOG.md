@@ -5,6 +5,10 @@
 - Major: Remove the setter methods: `setName`, `setMessage`, `setCause`, `setData`.
   Use a simple assignation instead.
 - Major: A missing cause is now represented by `undefined` instead of `null`.
+- Minor: `Incident(error: Error)` can now convert to instances of the current
+  `Incident` constructor.
+- Minor: A simple function call allows to create errors that do not capture the stack
+- Internal: Define the public exports in a separate file (`src/lib/index.ts`)
 
 # 1.2.1
 
