@@ -156,24 +156,24 @@ of the current call stack (only resolved when reading `.stack` or throwing the e
 
 `new` operator signatures table
 
-|cause|name |data |message| Comment                                                             |
-|:---:|:---:|:---:|:-----:|:--------------------------------------------------------------------|
-|     |     |     |       |`new(): Incident<"Incident", {}, undefined>`                         |
-|     |     |     |   ✔   |`new(...): Incident<"Incident", {}, undefined>`                      |
-|     |     |  ✔  |       |`new<Data>(...): Incident<"Incident", Data, undefined>`              |
-|     |     |  ✔  |   ✔   |`new<Data>(...): Incident<"Incident", Data, undefined>`              |
-|     |  ✔  |     |       |**Not Planned**, use `new Incident(name, "")`                        |
-|     |  ✔  |     |   ✔   |`new<Name>(...): Incident<Name, {}, undefined>`                      |
-|     |  ✔  |  ✔  |       |**Planned**, use `new Incident(name, data, "")` until available      |
-|     |  ✔  |  ✔  |   ✔   |`new<Name, Data>(...): Incident<Name, Data, undefined>`              |
-|  ✔  |     |     |       |**Not Planned**, use `new Incident(cause, "")` or `Incident(cause)`  |
-|  ✔  |     |     |   ✔   |**Planned**, use `new Incident(cause, {}, "")` until available       |
-|  ✔  |     |  ✔  |       |`new<Data, Cause>(...): Incident<"Incident", Data, Cause>`           |
-|  ✔  |     |  ✔  |   ✔   |`new<Data, Cause>(...): Incident<"Incident", Data, Cause>`           |
-|  ✔  |  ✔  |     |       |`new<Name, Cause>(...): Incident<Name, {}, Cause>`                   |
-|  ✔  |  ✔  |     |   ✔   |`new<Name, Cause>(...): Incident<Name, {}, Cause>`                   |
-|  ✔  |  ✔  |  ✔  |       |**Planned**, use `new Incident(cause, name, data, "") until available|
-|  ✔  |  ✔  |  ✔  |   ✔   |`new<Name, Data, Cause>(...): Incident<Name, Data, Cause>`           |
+|cause|name |data |message| Comment                                                            |
+|:---:|:---:|:---:|:-----:|:-------------------------------------------------------------------|
+|     |     |     |       |`new(): Incident<"Incident", {}, undefined>`                        |
+|     |     |     |   ✔   |`new(...): Incident<"Incident", {}, undefined>`                     |
+|     |     |  ✔  |       |`new<Data>(...): Incident<"Incident", Data, undefined>`             |
+|     |     |  ✔  |   ✔   |`new<Data>(...): Incident<"Incident", Data, undefined>`             |
+|     |  ✘  |     |       |**Not possible**, use `new Incident(name, "")`                      |
+|     |  ✔  |     |   ✔   |`new<Name>(...): Incident<Name, {}, undefined>`                     |
+|     |  ✔  |  ✔  |       |`new<Name, Data>(...): Incident<Name, Data, undefined>`             |
+|     |  ✔  |  ✔  |   ✔   |`new<Name, Data>(...): Incident<Name, Data, undefined>`             |
+|  ✘  |     |     |       |**Not possible**, use `new Incident(cause, "")` or `Incident(cause)`|
+|  ✔  |     |     |   ✔   |`new<Cause>(...): Incident<"Incident", {}, Cause>`                  |
+|  ✔  |     |  ✔  |       |`new<Data, Cause>(...): Incident<"Incident", Data, Cause>`          |
+|  ✔  |     |  ✔  |   ✔   |`new<Data, Cause>(...): Incident<"Incident", Data, Cause>`          |
+|  ✘  |  ✘  |     |       |**Not possible**, use `new Incident(cause, name, "")`               |
+|  ✔  |  ✔  |     |   ✔   |`new<Name, Cause>(...): Incident<Name, {}, Cause>`                  |
+|  ✔  |  ✔  |  ✔  |       |`new<Name, Data, Cause>(...): Incident<Name, Data, Cause>`          |
+|  ✔  |  ✔  |  ✔  |   ✔   |`new<Name, Data, Cause>(...): Incident<Name, Data, Cause>`          |
 
 ### Call
 
@@ -190,24 +190,24 @@ a lazy message or stack, it will remain non-evaluated.
 If the argument is already an instance of the current `Incident`, a copy will be
 created. If you added extra properties, they will be lost.
 
-|cause|name |data |message| Comment                                                         |
-|:---:|:---:|:---:|:-----:|:----------------------------------------------------------------|
-|     |     |     |       |`(): Incident<"Incident", {}, undefined>`                        |
-|     |     |     |   ✔   |`(...): Incident<"Incident", {}, undefined>`                     |
-|     |     |  ✔  |       |`<Data>(...): Incident<"Incident", Data, undefined>`             |
-|     |     |  ✔  |   ✔   |`<Data>(...): Incident<"Incident", Data, undefined>`             |
-|     |  ✔  |     |       |**Not Planned**, use `Incident(name, "")`                        |
-|     |  ✔  |     |   ✔   |`<Name>(...): Incident<Name, {}, undefined>`                     |
-|     |  ✔  |  ✔  |       |**Planned**, use `Incident(name, data, "")` until available      |
-|     |  ✔  |  ✔  |   ✔   |`<Name, Data>(...): Incident<Name, Data, undefined>`             |
-|  ✔  |     |     |       |Convert to an instance of this `Incident` constructor            |
-|  ✔  |     |     |   ✔   |**Planned**, use `new Incident(cause, {}, "")` until available   |
-|  ✔  |     |  ✔  |       |`<Data, Cause>(...): Incident<"Incident", Data, Cause>`          |
-|  ✔  |     |  ✔  |   ✔   |`<Data, Cause>(...): Incident<"Incident", Data, Cause>`          |
-|  ✔  |  ✔  |     |       |`<Name, Cause>(...): Incident<Name, {}, Cause>`                  |
-|  ✔  |  ✔  |     |   ✔   |`<Name, Cause>(...): Incident<Name, {}, Cause>`                  |
-|  ✔  |  ✔  |  ✔  |       |**Planned**, use `Incident(cause, name, data, "") until available|
-|  ✔  |  ✔  |  ✔  |   ✔   |`<Name, Data, Cause>(...): Incident<Name, Data, Cause>`          |
+|cause|name |data |message| Comment                                                 |
+|:---:|:---:|:---:|:-----:|:--------------------------------------------------------|
+|     |     |     |       |`(): Incident<"Incident", {}, undefined>`                |
+|     |     |     |   ✔   |`(...): Incident<"Incident", {}, undefined>`             |
+|     |     |  ✔  |       |`<Data>(...): Incident<"Incident", Data, undefined>`     |
+|     |     |  ✔  |   ✔   |`<Data>(...): Incident<"Incident", Data, undefined>`     |
+|     |  ✘  |     |       |**Not possible**, use `Incident(name, "")`               |
+|     |  ✔  |     |   ✔   |`<Name>(...): Incident<Name, {}, undefined>`             |
+|     |  ✔  |  ✔  |       |`new<Name, Data>(...): Incident<Name, Data, undefined>`  |
+|     |  ✔  |  ✔  |   ✔   |`<Name, Data>(...): Incident<Name, Data, undefined>`     |
+|  ✔  |     |     |       |**Convert to an instance of this `Incident` constructor**|
+|  ✔  |     |     |   ✔   |`<Cause>(...): Incident<"Incident", {}, Cause>`          |
+|  ✔  |     |  ✔  |       |`<Data, Cause>(...): Incident<"Incident", Data, Cause>`  |
+|  ✔  |     |  ✔  |   ✔   |`<Data, Cause>(...): Incident<"Incident", Data, Cause>`  |
+|  ✘  |  ✘  |     |       |**Not possible**, use `Incident(cause, name, "")`        |
+|  ✔  |  ✔  |     |   ✔   |`<Name, Cause>(...): Incident<Name, {}, Cause>`          |
+|  ✔  |  ✔  |  ✔  |       |`<Name, Data, Cause>(...): Incident<Name, Data, Cause>`  |
+|  ✔  |  ✔  |  ✔  |   ✔   |`<Name, Data, Cause>(...): Incident<Name, Data, Cause>`  |
 
 ## License
 
