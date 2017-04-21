@@ -1,4 +1,4 @@
-# Next
+# 2.0.0
 
 - Major: Use the Incident name as a discriminant property for the data and cause.
   This changes the signature from `Incident<Data>` to `Incident<Name, Data, Cause>`
