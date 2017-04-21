@@ -54,6 +54,39 @@ function printError(error: BaseError): void {
 }
 ```
 
+## Why
+
+My goal with this library was to simplify the automatic handling of errors and
+provide better error messages. Javascript errors are not very helpful because extending
+them and then extracting data is tedious because you need a declaration statement,
+multiple assignations, and then match on the name that is usually the generic `"Error"`
+or rely on a brittle `instance of`.
+
+To achieve automatic error handling, the information describing the error should
+be easily accessible programmatically. That's why you can directly pass a data object
+to the `Incident` constructor. Being able to pass data on the fly means that you do not need a
+declaration statement for the error separate property assignations. A key identifying the error
+is the second requirement for automatic error handling, `Incident` simply uses the name.
+As explained in the features, it allows to unambiguously identify the error (I'd recommend to
+always use a name). Using a name (as a string enum variant) is also more reliable than using
+`instance of` (prototype chain lookup) to check for the type of custom errors. The two main
+advantages are that it's easier to serialize / deserialize and is not affected by the module
+duplication of the Node module resolution algorithm.
+
+To provide better error messages, especially for asynchronous operations, I made the cause
+of the error a first-class information. It allows to deal with deferred or wrapped errors
+more pleasant: the stack trace at each step is preserved.
+
+The library is already pretty verbose (I am waiting for generic defaults in TS 2.3) so
+I'd like to keep the usage simple. For example, I have experimented with a arrays of causes (when
+an error has multiple simultaneous causes).
+The displayed messages were pretty good but it made the code to handle the errors automatically
+pretty complex because the type for the cause was `Error | Error[] | undefined`.
+This feature did not even make it to the version 1. If you need 
+
+Finally, performance is also a goal. That's why the library performs late / lazy stack capture
+and allows for message formatters that are called only when needed.
+
 ## Usage
 
 ### Exports
@@ -190,24 +223,24 @@ a lazy message or stack, it will remain non-evaluated.
 If the argument is already an instance of the current `Incident`, a copy will be
 created. If you added extra properties, they will be lost.
 
-|cause|name |data |message| Comment                                                 |
-|:---:|:---:|:---:|:-----:|:--------------------------------------------------------|
-|     |     |     |       |`(): Incident<"Incident", {}, undefined>`                |
-|     |     |     |   ✔   |`(...): Incident<"Incident", {}, undefined>`             |
-|     |     |  ✔  |       |`<Data>(...): Incident<"Incident", Data, undefined>`     |
-|     |     |  ✔  |   ✔   |`<Data>(...): Incident<"Incident", Data, undefined>`     |
-|     |  ✘  |     |       |**Not possible**, use `Incident(name, "")`               |
-|     |  ✔  |     |   ✔   |`<Name>(...): Incident<Name, {}, undefined>`             |
-|     |  ✔  |  ✔  |       |`new<Name, Data>(...): Incident<Name, Data, undefined>`  |
-|     |  ✔  |  ✔  |   ✔   |`<Name, Data>(...): Incident<Name, Data, undefined>`     |
-|  ✔  |     |     |       |**Convert to an instance of this `Incident` constructor**|
-|  ✔  |     |     |   ✔   |`<Cause>(...): Incident<"Incident", {}, Cause>`          |
-|  ✔  |     |  ✔  |       |`<Data, Cause>(...): Incident<"Incident", Data, Cause>`  |
-|  ✔  |     |  ✔  |   ✔   |`<Data, Cause>(...): Incident<"Incident", Data, Cause>`  |
-|  ✘  |  ✘  |     |       |**Not possible**, use `Incident(cause, name, "")`        |
-|  ✔  |  ✔  |     |   ✔   |`<Name, Cause>(...): Incident<Name, {}, Cause>`          |
-|  ✔  |  ✔  |  ✔  |       |`<Name, Data, Cause>(...): Incident<Name, Data, Cause>`  |
-|  ✔  |  ✔  |  ✔  |   ✔   |`<Name, Data, Cause>(...): Incident<Name, Data, Cause>`  |
+|cause|name |data |message| Comment                                                  |
+|:---:|:---:|:---:|:-----:|:---------------------------------------------------------|
+|     |     |     |       |`(): Incident<"Incident", {}, undefined>`                 |
+|     |     |     |   ✔   |`(...): Incident<"Incident", {}, undefined>`              |
+|     |     |  ✔  |       |`<Data>(...): Incident<"Incident", Data, undefined>`      |
+|     |     |  ✔  |   ✔   |`<Data>(...): Incident<"Incident", Data, undefined>`      |
+|     |  ✘  |     |       |**Not possible**, use `Incident(name, "")`                |
+|     |  ✔  |     |   ✔   |`<Name>(...): Incident<Name, {}, undefined>`              |
+|     |  ✔  |  ✔  |       |`new<Name, Data>(...): Incident<Name, Data, undefined>`   |
+|     |  ✔  |  ✔  |   ✔   |`<Name, Data>(...): Incident<Name, Data, undefined>`      |
+|  ✔  |     |     |       |**Converts to an instance of this `Incident` constructor**|
+|  ✔  |     |     |   ✔   |`<Cause>(...): Incident<"Incident", {}, Cause>`           |
+|  ✔  |     |  ✔  |       |`<Data, Cause>(...): Incident<"Incident", Data, Cause>`   |
+|  ✔  |     |  ✔  |   ✔   |`<Data, Cause>(...): Incident<"Incident", Data, Cause>`   |
+|  ✘  |  ✘  |     |       |**Not possible**, use `Incident(cause, name, "")`         |
+|  ✔  |  ✔  |     |   ✔   |`<Name, Cause>(...): Incident<Name, {}, Cause>`           |
+|  ✔  |  ✔  |  ✔  |       |`<Name, Data, Cause>(...): Incident<Name, Data, Cause>`   |
+|  ✔  |  ✔  |  ✔  |   ✔   |`<Name, Data, Cause>(...): Incident<Name, Data, Cause>`   |
 
 ## License
 
