@@ -18,7 +18,8 @@ export interface Incident<Name extends string, Data extends {}, Cause extends (E
 export interface StaticIncident extends Function {
 //new<                                C extends Error>(cause: C                                                              ): Incident<"Incident", {}, C        >;
   new<                                C extends Error>(cause: C,                   message : string | ((data?: {}) => string)): Incident<"Incident", {}, C        >;
-  new<N extends string,               C extends Error>(cause: C, name: N,          message?: string | ((data?: {}) => string)): Incident<N         , {}, C        >;
+//new<N extends string,               C extends Error>(cause: C, name: N,                                                    ): Incident<N         , {}, C        >;
+  new<N extends string,               C extends Error>(cause: C, name: N,          message : string | ((data?: {}) => string)): Incident<N         , {}, C        >;
   new                                                 (                            message?: string | ((data?: {}) => string)): Incident<"Incident", {}, undefined>;
 //new<N extends string                               >(          name: N,                                                    ): Incident<N,          {}, undefined>;
   new<N extends string                               >(          name: N,          message : string | ((data?: {}) => string)): Incident<N,          {}, undefined>;
@@ -29,7 +30,8 @@ export interface StaticIncident extends Function {
 
      <                                C extends Error>(cause: C                                                              ): Incident<"Incident", {}, C        >;
      <                                C extends Error>(cause: C,                   message : string | ((data?: {}) => string)): Incident<"Incident", {}, C        >;
-     <N extends string,               C extends Error>(cause: C, name: N,          message?: string | ((data?: {}) => string)): Incident<N         , {}, C        >;
+//   <N extends string,               C extends Error>(cause: C, name: N,                                                    ): Incident<N         , {}, C        >;
+     <N extends string,               C extends Error>(cause: C, name: N,          message : string | ((data?: {}) => string)): Incident<N         , {}, C        >;
                                                       (                            message?: string | ((data?: {}) => string)): Incident<"Incident", {}, undefined>;
 //   <N extends string                               >(          name: N,                                                    ): Incident<N,          {}, undefined>;
      <N extends string                               >(          name: N,          message : string | ((data?: {}) => string)): Incident<N,          {}, undefined>;

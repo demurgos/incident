@@ -1,6 +1,6 @@
 # Next
 
-- Major: Use the Incident name as a discriminant for the data and cause.
+- Major: Use the Incident name as a discriminant property for the data and cause.
   This changes the signature from `Incident<Data>` to `Incident<Name, Data, Cause>`
 - Major: Remove the setter methods: `setName`, `setMessage`, `setCause`, `setData`.
   Use a simple assignation instead.
