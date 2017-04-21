@@ -187,11 +187,11 @@ function createIncident(_super: Function): StaticInterface {
         const stack: string = this._stack === null ?
           this._stackContainer.stack :
           this._stackContainer.stack.replace(/^[^\n]+\n[^\n]+\n/, "");
-        this._stack = this._message === "" ?
+        this._stack = this.message === "" ?
           `${this.name}\n${stack}` :
-          `${this.name}: ${this._message}\n${stack}`;
+          `${this.name}: ${this.message}\n${stack}`;
       } else {
-        this._stack = this._message === "" ? this.name : `${this.name}: ${this._message}`;
+        this._stack = this.message === "" ? this.name : `${this.name}: ${this.message}`;
       }
       if (this.cause !== undefined && this.cause.stack !== undefined) {
         this._stack = `${this._stack}\n  caused by ${this.cause.stack}`;
