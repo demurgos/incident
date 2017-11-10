@@ -24,10 +24,29 @@ function assertEqualErrors<N extends string, D extends {}, C extends (Error | un
   }
 }
 
-describe("Incident", function () {
-  it("should inherit from the native Error", function () {
+describe("Prototype chain", function () {
+  it("`Incident()` should return an instance of Error and Incident", function () {
+    const incident: Incident<"Incident", {}, undefined> = Incident();
+    assert.instanceOf(incident, Error);
+    assert.instanceOf(incident, Incident);
+  });
+
+  it("`new Incident()` should return an instance of Error and Incident", function () {
     const incident: Incident<"Incident", {}, undefined> = new Incident();
     assert.instanceOf(incident, Error);
+    assert.instanceOf(incident, Incident);
+  });
+
+  it("`new IncidentSubClass()` should return an instance of Error, Incident and IncidentSubClass", function () {
+    class IncidentSubClass extends Incident {
+      constructor() {
+        super();
+      }
+    }
+    const incident: Incident<"Incident", {}, undefined> = new IncidentSubClass();
+    assert.instanceOf(incident, Error);
+    assert.instanceOf(incident, Incident);
+    assert.instanceOf(incident, IncidentSubClass);
   });
 });
 

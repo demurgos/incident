@@ -1,6 +1,7 @@
 # Next
 
-- **[Fix]** Support strict variance of the formatter function
+- **[Fix]** Support strict variance of the formatter function.
+- **[Internal]** Add a few tests to ensure that the prototype chain is preserved.
 
 # 2.0.0
 
