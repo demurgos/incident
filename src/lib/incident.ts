@@ -43,7 +43,7 @@ const dummyError: Error = new Error();
 const noStackSymbol: Object = {};
 
 // Incident factory, allows a fine control over the getter / setters
-// and will eventually to have TypeError, SyntaxError, etc. as super classes.
+// and will eventually allow to have TypeError, SyntaxError, etc. as super classes.
 function createIncident(_super: Function): StaticInterface {
 
   Object.setPrototypeOf(Incident, _super);
@@ -147,7 +147,7 @@ function createIncident(_super: Function): StaticInterface {
       data = args[argIndex++];
     }
 
-    _super.call(this, typeof message === "function" ? "<lazyMessage was not evaluated>" : message);
+    _super.call(this, typeof message === "function" ? "<non-evaluated lazy message>" : message);
 
     this.name = name;
     defineHiddenProperty(this, "_message", message);
@@ -183,7 +183,7 @@ function createIncident(_super: Function): StaticInterface {
   function getStack(this: PrivateIncident<string, {}, Error | undefined>): string {
     if (this._stack === undefined || this._stack === null) {
       if (this._stackContainer !== undefined && this._stackContainer.stack !== undefined) {
-        // Remove "Error\n    at new Incident..."
+        // This removes the firs lines corresponding to: "Error\n    at new Incident [...]"
         const stack: string = this._stack === null ?
           this._stackContainer.stack :
           this._stackContainer.stack.replace(/^[^\n]+\n[^\n]+\n/, "");

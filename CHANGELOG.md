@@ -1,3 +1,7 @@
+# Next
+
+- **[Fix]** Support strict variance of the formatter function
+
 # 2.0.0
 
 - Major: Use the Incident name as a discriminant property for the data and cause.
