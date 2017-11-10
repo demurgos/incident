@@ -14,7 +14,7 @@ export interface Incident<Name extends string, Data extends {}, Cause extends (E
   toString(): string;
 }
 
-/* tslint:disable:comment-format max-line-length typedef-whitespace */
+/* tslint:disable:comment-format max-line-length typedef-whitespace space-within-parens */
 export interface StaticIncident extends Function {
 //new<                                C extends Error>(cause: C                                                             ): Incident<"Incident", {}, C        >;
   new<                                C extends Error>(cause: C,                   message : string | ((data: {}) => string)): Incident<"Incident", {}, C        >;
@@ -28,7 +28,7 @@ export interface StaticIncident extends Function {
   new<N extends string, D extends {}                 >(          name: N, data: D, message?: string | ((data: D) => string) ): Incident<N,          D,  undefined>;
   new<                  D extends {}                 >(                   data: D, message?: string | ((data: D) => string) ): Incident<"Incident", D,  undefined>;
 
-     <N extends string, D extends {}, C extends Error | undefined>(error: Error & {name: N, data: D, cause?: C}             ): Incident<N,          D,  C        >;
+     <N extends string, D extends {}, C extends Error | undefined>(error: Error & {name: N; data: D; cause?: C}             ): Incident<N,          D,  C        >;
                                                                   (error: Error                                             ): Incident<string,     {}, undefined>;
 
      <                                C extends Error>(cause: C,                   message : string | ((data: {}) => string)): Incident<"Incident", {}, C        >;

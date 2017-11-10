@@ -2,20 +2,18 @@
   "name": "incident",
   "version": "2.0.0",
   "description": "Simple powerful errors",
-  "main": "dist/lib-es2015/lib/index.js",
-  "types": "dist/lib-es2015/lib/index.d.ts",
-  "browser": "dist/lib-es5/lib/index.js",
+  "private": true,
+  "main": "dist/lib/index.js",
+  "types": "dist/lib/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git://github.com/demurgos/incident.git"
+    "url": "https://github.com/demurgos/incident"
   },
   "scripts": {
-    "prepare": "gulp all:tsconfig.json && gulp :tslint.json && gulp all:dist",
-    "test": "gulp :lint && gulp lib-test",
+    "prepare": "gulp all:tsconfig.json && gulp :tslint.json && gulp lib:dist",
+    "test": "gulp :lint && gulp test",
     "prepublishOnly": "npm test",
-    ":lint": "gulp :lint",
-    "typedoc": "typedoc --includeDeclarations --out docs/api --module commonjs --target es2015 --exclude '**/*.spec.ts' --mode modules --name Incident --readme README.md src/lib/",
-    "gh-pages": "rm -rf build/gh-pages/ && typedoc --includeDeclarations --out build/gh-pages/ --module commonjs --target es2015 --exclude '**/*.spec.ts' --mode modules --name Incident --readme README.md src/lib/ && touch build/gh-pages/.nojekyll && cp -r build/gh-pages/. dist/gh-pages/"
+    "lint": "gulp :lint"
   },
   "keywords": [
     "error"
@@ -25,15 +23,17 @@
       "test"
     ]
   },
-  "author": "",
+  "author": "Charles Samborski <demurgos@demurgos.net> (https://demurgos.net)",
   "license": "MIT",
   "devDependencies": {
     "@types/chai": "^3.5.1",
     "@types/mocha": "^2.2.41",
     "chai": "^3.5.0",
-    "demurgos-web-build-tools": "0.13.0-beta.5",
     "gulp": "github:gulpjs/gulp#4.0",
+    "minimist": "^1.2.0",
     "pre-commit": "^1.2.2",
-    "typescript": "^2.2.2"
+    "ts-node": "^3.3.0",
+    "turbo-gulp": "^0.15.4",
+    "typescript": "^2.6.1"
   }
 }

@@ -1,7 +1,9 @@
 # Next
 
+- **[Breaking]** Drop support for browser build (es5): use your own transpiler if you need it.
 - **[Fix]** Support strict variance of the formatter function.
 - **[Internal]** Add a few tests to ensure that the prototype chain is preserved.
+- **[Internal]** Update project tools and enable continuous deployment
 
 # 2.0.0 (2017-04-21)
 
