@@ -1,4 +1,4 @@
-import {Incident as Interface, StaticIncident as StaticInterface} from "./interfaces";
+import { Incident as Interface, StaticIncident as StaticInterface } from "./interfaces";
 
 /**
  * Define a hidden property
@@ -9,10 +9,10 @@ import {Incident as Interface, StaticIncident as StaticInterface} from "./interf
  */
 function defineHiddenProperty(obj: {}, propertyName: string, value: any) {
   Object.defineProperty(obj, propertyName, {
-    value: value,
+    value,
     configurable: true,
     enumerable: false,
-    writable: true
+    writable: true,
   });
 }
 
@@ -25,10 +25,10 @@ function defineHiddenProperty(obj: {}, propertyName: string, value: any) {
  */
 function defineSimpleProperty(obj: {}, propertyName: string, value: any) {
   Object.defineProperty(obj, propertyName, {
-    value: value,
+    value,
     configurable: true,
     enumerable: true,
-    writable: true
+    writable: true,
   });
 }
 
@@ -57,10 +57,10 @@ function createIncident(_super: Function): StaticInterface {
 
   interface PrivateIncident<N extends string, D extends {}, C extends (Error | undefined)> extends Interface<N, D, C> {
     /**
-     * `(data?: D) => string`: A lazy formatter, called once when needed. Its result replaces `_message`
+     * `(data: D) => string`: A lazy formatter, called once when needed. Its result replaces `_message`
      * `string`: The resolved error message.
      */
-    _message: string | ((data?: D) => string);
+    _message: string | ((data: D) => string);
 
     /**
      * `undefined`: The stack is not resolved yet, clean the stack when resolving
@@ -77,7 +77,7 @@ function createIncident(_super: Function): StaticInterface {
 
   function Incident<N extends string, D extends {}, C extends (Error | undefined)>(
     this: PrivateIncident<N, D, C>,
-    ...args: any[]
+    ...args: any[],
   ): Interface<N, D, C> | void {
     if (!(this instanceof Incident)) {
       switch (args.length) {
@@ -86,7 +86,9 @@ function createIncident(_super: Function): StaticInterface {
         case 1:
           if (args[0] instanceof Error) {
             let converted: PrivateIncident<any, any, any>;
+            // tslint:disable-next-line:strict-boolean-expressions
             const name: string = args[0].name || "";
+            // tslint:disable-next-line:strict-boolean-expressions
             const message: string = typeof args[0]._message === "function" ? args[0]._message : args[0].message || "";
             if (args[0].cause instanceof Error) {
               if (typeof args[0].data === "object") {
@@ -125,7 +127,7 @@ function createIncident(_super: Function): StaticInterface {
     let name: N = "Incident" as N;
     let data: D = {} as D;
     let cause: C | undefined = undefined;
-    let message: string | ((data?: D) => string) = "";
+    let message: string | ((data: D) => string) = "";
 
     let argsLen: number = args.length;
     let argIndex: number = 0;
@@ -134,7 +136,7 @@ function createIncident(_super: Function): StaticInterface {
       noStack = true;
       argIndex++;
     }
-    if (argsLen > argIndex  && (typeof args[argsLen - 1] === "string" || typeof args[argsLen - 1] === "function")) {
+    if (argsLen > argIndex && (typeof args[argsLen - 1] === "string" || typeof args[argsLen - 1] === "function")) {
       message = args[--argsLen];
     }
     if (argIndex < argsLen && args[argIndex] instanceof Error) {
@@ -175,7 +177,7 @@ function createIncident(_super: Function): StaticInterface {
 
   function setMessage<D extends {}>(
     this: PrivateIncident<string, D, Error | undefined>,
-    message: string | ((data: D) => string)
+    message: string | ((data: D) => string),
   ): void {
     this._message = message;
   }
@@ -200,7 +202,7 @@ function createIncident(_super: Function): StaticInterface {
     Object.defineProperty(this, "message", {
       configurable: true,
       value: this._stack,
-      writable: true
+      writable: true,
     });
     return this._stack;
   }
@@ -214,14 +216,14 @@ function createIncident(_super: Function): StaticInterface {
     get: getMessage,
     set: setMessage,
     enumerable: true,
-    configurable: true
+    configurable: true,
   });
 
   Object.defineProperty(Incident.prototype, "stack", {
     get: getStack,
     set: setStack,
     enumerable: true,
-    configurable: true
+    configurable: true,
   });
 
   return Incident as any;
@@ -229,8 +231,7 @@ function createIncident(_super: Function): StaticInterface {
 
 /* tslint:disable-next-line:variable-name */
 export const Incident: StaticInterface = createIncident(Error);
+
 export interface Incident<Name extends string, Data extends {}, Cause extends (Error | undefined)>
   extends Interface<Name, Data, Cause> {
 }
-
-export default Incident;

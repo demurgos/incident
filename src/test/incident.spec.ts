@@ -1,5 +1,7 @@
-import {assert} from "chai";
-import {Incident} from "../lib/incident";
+import { assert } from "chai";
+import { Incident } from "../lib/incident";
+
+// tslint:disable:max-file-line-count
 
 interface IncidentLike<N extends string, D extends {}, C extends (Error | undefined)> {
   message: string;
@@ -11,7 +13,7 @@ interface IncidentLike<N extends string, D extends {}, C extends (Error | undefi
 
 function assertEqualErrors<N extends string, D extends {}, C extends (Error | undefined)>(
   actual: Incident<N, D, C>,
-  expected: IncidentLike<N, D, C>
+  expected: IncidentLike<N, D, C>,
 ): void | never {
   for (const key in expected) {
     const actualProperty: any = (<any> actual)[key];
@@ -19,7 +21,7 @@ function assertEqualErrors<N extends string, D extends {}, C extends (Error | un
     assert.deepEqual(
       actualProperty,
       expectedProperty,
-      `Expected \`${actualProperty}\` to be \`${expectedProperty}\` for ${key}`
+      `Expected \`${actualProperty}\` to be \`${expectedProperty}\` for ${key}`,
     );
   }
 }
@@ -43,6 +45,7 @@ describe("Prototype chain", function () {
         super();
       }
     }
+
     const incident: Incident<"Incident", {}, undefined> = new IncidentSubClass();
     assert.instanceOf(incident, Error);
     assert.instanceOf(incident, Incident);
@@ -56,10 +59,10 @@ describe("new Incident(...)", function () {
     const cause: Cause = new Incident("QuantumEffect", "What is even a cause?");
     const incident: Incident<"Incident", {}, Cause> = new Incident(cause, "Quantum stuff is rad but weird");
     assertEqualErrors(incident, {
-      cause: cause,
+      cause,
       name: "Incident",
       data: {},
-      message: "Quantum stuff is rad but weird"
+      message: "Quantum stuff is rad but weird",
     });
   });
 
@@ -70,15 +73,15 @@ describe("new Incident(...)", function () {
     const cause: Cause = new Incident("NotANumber", numberBox, "The number box contains NaN");
     const incident: Incident<"Incident", {}, Cause> = new Incident(
       cause,
-      () => `Error with the number box containing ${numberBox.value}`
+      () => `Error with the number box containing ${numberBox.value}`,
     );
     // Seriously, if you use a formatter with a lazy message, avoid to rely on mutable data reference you don't control
     numberBox.value = 0;
     assertEqualErrors(incident, {
-      cause: cause,
+      cause,
       name: "Incident",
       data: {},
-      message: "Error with the number box containing 0"
+      message: "Error with the number box containing 0",
     });
   });
 
@@ -87,10 +90,10 @@ describe("new Incident(...)", function () {
     const cause: Cause = new Incident("Hardware", "This is a hardware issue");
     const incident: Incident<"LightBulb", {}, Cause> = new Incident(cause, "LightBulb", "Unable to change light bulb");
     assertEqualErrors(incident, {
-      cause: cause,
+      cause,
       name: "LightBulb",
       data: {},
-      message: "Unable to change light bulb"
+      message: "Unable to change light bulb",
     });
   });
 
@@ -100,13 +103,13 @@ describe("new Incident(...)", function () {
     const incident: Incident<"CauseFound", {}, Cause> = new Incident(
       cause,
       "CauseFound",
-      () => "Found a cause"
+      () => "Found a cause",
     );
     assertEqualErrors(incident, {
-      cause: cause,
+      cause,
       name: "CauseFound",
       data: {},
-      message: "Found a cause"
+      message: "Found a cause",
     });
   });
 
@@ -115,7 +118,7 @@ describe("new Incident(...)", function () {
     assertEqualErrors(incident, {
       name: Incident.name,
       data: {},
-      message: ""
+      message: "",
     });
   });
 
@@ -124,7 +127,7 @@ describe("new Incident(...)", function () {
     assertEqualErrors(incident, {
       name: Incident.name,
       data: {},
-      message: "Unable to fire the reactor!"
+      message: "Unable to fire the reactor!",
     });
   });
 
@@ -133,7 +136,7 @@ describe("new Incident(...)", function () {
     assertEqualErrors(incident, {
       name: Incident.name,
       data: {},
-      message: "The reactor is on fire!"
+      message: "The reactor is on fire!",
     });
   });
 
@@ -142,7 +145,7 @@ describe("new Incident(...)", function () {
     assertEqualErrors(incident, {
       name: "paradoxError",
       data: {},
-      message: "This is not an error"
+      message: "This is not an error",
     });
   });
 
@@ -152,7 +155,7 @@ describe("new Incident(...)", function () {
     assertEqualErrors(incident, {
       name: "paradoxError",
       data: {},
-      message: "This is not an error"
+      message: "This is not an error",
     });
   });
 
@@ -162,13 +165,13 @@ describe("new Incident(...)", function () {
     const incident: Incident<"SimpleWrapper", {simple: true}, Cause> = new Incident(
       cause,
       "SimpleWrapper",
-      {simple: true as true}
+      {simple: true as true},
     );
     assertEqualErrors(incident, {
-      cause: cause,
+      cause,
       name: "SimpleWrapper",
       data: {simple: true},
-      message: ""
+      message: "",
     });
   });
 
@@ -180,13 +183,13 @@ describe("new Incident(...)", function () {
       cause,
       "Network",
       {uri: "example.com"},
-      "Unable to connect"
+      "Unable to connect",
     );
     assertEqualErrors(incident, {
-      cause: cause,
+      cause,
       name: "Network",
       data: {uri: "example.com"},
-      message: "Unable to connect"
+      message: "Unable to connect",
     });
   });
 
@@ -197,13 +200,13 @@ describe("new Incident(...)", function () {
       cause,
       "InvalidCityName",
       {value: "Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch"},
-      (data: {value: string}): string => `The value ${JSON.stringify(data.value)} is an invalid city name`
+      (data: {value: string}): string => `The value ${JSON.stringify(data.value)} is an invalid city name`,
     );
     assertEqualErrors(incident, {
-      cause: cause,
+      cause,
       name: "InvalidCityName",
       data: {value: "Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch"},
-      message: `The value "Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch" is an invalid city name`
+      message: 'The value "Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch" is an invalid city name',
     });
   });
 
@@ -211,15 +214,15 @@ describe("new Incident(...)", function () {
     type Cause = Incident<"NeedForEasyErrorManagement", {}, undefined>;
     const cause: Cause = new Incident("NeedForEasyErrorManagement", "");
     const now: Date = new Date();
-    const incident: Incident<"Incident", {homepage: string, author: string}, Cause> = new Incident(
+    const incident: Incident<"Incident", {homepage: string; author: string}, Cause> = new Incident(
       cause,
-      {homepage: "https://github.com/demurgos/incident", author: "Demurgos"}
+      {homepage: "https://github.com/demurgos/incident", author: "Demurgos"},
     );
     assertEqualErrors(incident, {
-      cause: cause,
+      cause,
       name: "Incident",
       data: {homepage: "https://github.com/demurgos/incident", author: "Demurgos"},
-      message: ""
+      message: "",
     });
   });
 
@@ -230,13 +233,13 @@ describe("new Incident(...)", function () {
     const incident: Incident<"Incident", {time: Date}, Cause> = new Incident(
       cause,
       {time: now},
-      "Surprise error"
+      "Surprise error",
     );
     assertEqualErrors(incident, {
-      cause: cause,
+      cause,
       name: "Incident",
       data: {time: now},
-      message: "Surprise error"
+      message: "Surprise error",
     });
   });
 
@@ -247,43 +250,44 @@ describe("new Incident(...)", function () {
     const incident: Incident<"Incident", {time: Date}, Cause> = new Incident(
       cause,
       {time: now},
-      "Surprise error"
+      "Surprise error",
     );
     assertEqualErrors(incident, {
-      cause: cause,
+      cause,
       name: "Incident",
       data: {time: now},
-      message: "Surprise error"
+      message: "Surprise error",
     });
   });
 
   it("new Incident(cause,       data, formatter)", function () {
     enum Unit {Kelvin, Celsius, Farenheit}
-    type Cause = Incident<"Temperature", {temperature: number, unit: Unit}, undefined>;
+
+    type Cause = Incident<"Temperature", {temperature: number; unit: Unit}, undefined>;
     // Sorry if you use imperial units
     const cause: Cause = new Incident("Temperature", {temperature: -273.15, unit: Unit.Celsius}, "It's 0K");
     const incident: Incident<"Incident", {endOfTheWorld: boolean}, Cause> = new Incident(
       cause,
       {endOfTheWorld: true},
-      (data: {endOfTheWorld: boolean}) => data.endOfTheWorld ? "Seems pretty serious" : "Could be worse"
+      (data: {endOfTheWorld: boolean}) => data.endOfTheWorld ? "Seems pretty serious" : "Could be worse",
     );
     assertEqualErrors(incident, {
-      cause: cause,
+      cause,
       name: "Incident",
       data: {endOfTheWorld: true},
-      message: "Seems pretty serious"
+      message: "Seems pretty serious",
     });
   });
 
   it("new Incident(       name, data           )", function () {
     const incident: Incident<"AintNobodyGotTimeForMessages", {timeForMessages: number}, undefined> = new Incident(
       "AintNobodyGotTimeForMessages",
-      {timeForMessages: 0}
+      {timeForMessages: 0},
     );
     assertEqualErrors(incident, {
       name: "AintNobodyGotTimeForMessages",
       data: {timeForMessages: 0},
-      message: ""
+      message: "",
     });
   });
 
@@ -292,12 +296,12 @@ describe("new Incident(...)", function () {
     const incident: Incident<"RegExp", {regExp: RegExp}, undefined> = new Incident(
       "RegExp",
       {regExp: htmlRegExp},
-      "Now you have two errors"
+      "Now you have two errors",
     );
     assertEqualErrors(incident, {
       name: "RegExp",
       data: {regExp: htmlRegExp},
-      message: "Now you have two errors"
+      message: "Now you have two errors",
     });
   });
 
@@ -306,12 +310,12 @@ describe("new Incident(...)", function () {
     const incident: Incident<"RegExp", {regex: RegExp}, undefined> = new Incident(
       "RegExp",
       {regex: antiRegExp},
-      (data: {regex: RegExp}) => `The RegExp for ${JSON.stringify(data.regex.source)} does not want to cooperate`
+      (data: {regex: RegExp}) => `The RegExp for ${JSON.stringify(data.regex.source)} does not want to cooperate`,
     );
     assertEqualErrors(incident, {
       name: "RegExp",
       data: {regex: antiRegExp},
-      message: `The RegExp for "[^]" does not want to cooperate`
+      message: "The RegExp for \"[^]\" does not want to cooperate",
     });
   });
 
@@ -320,7 +324,7 @@ describe("new Incident(...)", function () {
     assertEqualErrors(incident, {
       name: Incident.name,
       data: {port: 50313},
-      message: ""
+      message: "",
     });
   });
 
@@ -330,7 +334,7 @@ describe("new Incident(...)", function () {
     assertEqualErrors(incident, {
       name: Incident.name,
       data: {foo: "bar"},
-      message: "Foo/Bar"
+      message: "Foo/Bar",
     });
   });
 
@@ -339,7 +343,7 @@ describe("new Incident(...)", function () {
     assertEqualErrors(incident, {
       name: Incident.name,
       data: {bar: "foo"},
-      message: "Bar/Foo"
+      message: "Bar/Foo",
     });
   });
 });
@@ -351,10 +355,10 @@ describe("Incident(...)", function () {
     const cause: Cause = Incident("QuantumEffect", "What is even a cause?");
     const incident: Incident<"Incident", {}, Cause> = Incident(cause, "Quantum stuff is rad but weird");
     assertEqualErrors(incident, {
-      cause: cause,
+      cause,
       name: "Incident",
       data: {},
-      message: "Quantum stuff is rad but weird"
+      message: "Quantum stuff is rad but weird",
     });
   });
 
@@ -365,15 +369,15 @@ describe("Incident(...)", function () {
     const cause: Cause = Incident("NotANumber", numberBox, "The number box contains NaN");
     const incident: Incident<"Incident", {}, Cause> = Incident(
       cause,
-      () => `Error with the number box containing ${numberBox.value}`
+      () => `Error with the number box containing ${numberBox.value}`,
     );
     // Seriously, if you use a formatter with a lazy message, avoid to rely on mutable data reference you don't control
     numberBox.value = 0;
     assertEqualErrors(incident, {
-      cause: cause,
+      cause,
       name: "Incident",
       data: {},
-      message: "Error with the number box containing 0"
+      message: "Error with the number box containing 0",
     });
   });
 
@@ -382,10 +386,10 @@ describe("Incident(...)", function () {
     const cause: Cause = Incident("Hardware", "This is a hardware issue");
     const incident: Incident<"LightBulb", {}, Cause> = Incident(cause, "LightBulb", "Unable to change light bulb");
     assertEqualErrors(incident, {
-      cause: cause,
+      cause,
       name: "LightBulb",
       data: {},
-      message: "Unable to change light bulb"
+      message: "Unable to change light bulb",
     });
   });
 
@@ -395,13 +399,13 @@ describe("Incident(...)", function () {
     const incident: Incident<"CauseFound", {}, Cause> = Incident(
       cause,
       "CauseFound",
-      () => "Found a cause"
+      () => "Found a cause",
     );
     assertEqualErrors(incident, {
-      cause: cause,
+      cause,
       name: "CauseFound",
       data: {},
-      message: "Found a cause"
+      message: "Found a cause",
     });
   });
 
@@ -410,7 +414,7 @@ describe("Incident(...)", function () {
     assertEqualErrors(incident, {
       name: Incident.name,
       data: {},
-      message: ""
+      message: "",
     });
   });
 
@@ -419,7 +423,7 @@ describe("Incident(...)", function () {
     assertEqualErrors(incident, {
       name: Incident.name,
       data: {},
-      message: "Unable to fire the reactor!"
+      message: "Unable to fire the reactor!",
     });
   });
 
@@ -428,7 +432,7 @@ describe("Incident(...)", function () {
     assertEqualErrors(incident, {
       name: Incident.name,
       data: {},
-      message: "The reactor is on fire!"
+      message: "The reactor is on fire!",
     });
   });
 
@@ -437,7 +441,7 @@ describe("Incident(...)", function () {
     assertEqualErrors(incident, {
       name: "paradoxError",
       data: {},
-      message: "This is not an error"
+      message: "This is not an error",
     });
   });
 
@@ -447,7 +451,7 @@ describe("Incident(...)", function () {
     assertEqualErrors(incident, {
       name: "paradoxError",
       data: {},
-      message: "This is not an error"
+      message: "This is not an error",
     });
   });
 
@@ -457,13 +461,13 @@ describe("Incident(...)", function () {
     const incident: Incident<"SimpleWrapper", {simple: true}, Cause> = Incident(
       cause,
       "SimpleWrapper",
-      {simple: true as true}
+      {simple: true as true},
     );
     assertEqualErrors(incident, {
-      cause: cause,
+      cause,
       name: "SimpleWrapper",
       data: {simple: true},
-      message: ""
+      message: "",
     });
   });
 
@@ -475,13 +479,13 @@ describe("Incident(...)", function () {
       cause,
       "Network",
       {uri: "example.com"},
-      "Unable to connect"
+      "Unable to connect",
     );
     assertEqualErrors(incident, {
-      cause: cause,
+      cause,
       name: "Network",
       data: {uri: "example.com"},
-      message: "Unable to connect"
+      message: "Unable to connect",
     });
   });
 
@@ -492,13 +496,13 @@ describe("Incident(...)", function () {
       cause,
       "InvalidCityName",
       {value: "Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch"},
-      (data: {value: string}): string => `The value ${JSON.stringify(data.value)} is an invalid city name`
+      (data: {value: string}): string => `The value ${JSON.stringify(data.value)} is an invalid city name`,
     );
     assertEqualErrors(incident, {
-      cause: cause,
+      cause,
       name: "InvalidCityName",
       data: {value: "Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch"},
-      message: `The value "Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch" is an invalid city name`
+      message: "The value \"Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch\" is an invalid city name",
     });
   });
 
@@ -506,15 +510,15 @@ describe("Incident(...)", function () {
     type Cause = Incident<"NeedForEasyErrorManagement", {}, undefined>;
     const cause: Cause = Incident("NeedForEasyErrorManagement", "");
     const now: Date = new Date();
-    const incident: Incident<"Incident", {homepage: string, author: string}, Cause> = Incident(
+    const incident: Incident<"Incident", {homepage: string; author: string}, Cause> = Incident(
       cause,
-      {homepage: "https://github.com/demurgos/incident", author: "Demurgos"}
+      {homepage: "https://github.com/demurgos/incident", author: "Demurgos"},
     );
     assertEqualErrors(incident, {
-      cause: cause,
+      cause,
       name: "Incident",
       data: {homepage: "https://github.com/demurgos/incident", author: "Demurgos"},
-      message: ""
+      message: "",
     });
   });
 
@@ -525,13 +529,13 @@ describe("Incident(...)", function () {
     const incident: Incident<"Incident", {time: Date}, Cause> = Incident(
       cause,
       {time: now},
-      "Surprise error"
+      "Surprise error",
     );
     assertEqualErrors(incident, {
-      cause: cause,
+      cause,
       name: "Incident",
       data: {time: now},
-      message: "Surprise error"
+      message: "Surprise error",
     });
   });
 
@@ -542,43 +546,44 @@ describe("Incident(...)", function () {
     const incident: Incident<"Incident", {time: Date}, Cause> = Incident(
       cause,
       {time: now},
-      "Surprise error"
+      "Surprise error",
     );
     assertEqualErrors(incident, {
-      cause: cause,
+      cause,
       name: "Incident",
       data: {time: now},
-      message: "Surprise error"
+      message: "Surprise error",
     });
   });
 
   it("Incident(cause,       data, formatter)", function () {
     enum Unit {Kelvin, Celsius, Farenheit}
-    type Cause = Incident<"Temperature", {temperature: number, unit: Unit}, undefined>;
+
+    type Cause = Incident<"Temperature", {temperature: number; unit: Unit}, undefined>;
     // Sorry if you use imperial units
     const cause: Cause = Incident("Temperature", {temperature: -273.15, unit: Unit.Celsius}, "It's 0K");
     const incident: Incident<"Incident", {endOfTheWorld: boolean}, Cause> = Incident(
       cause,
       {endOfTheWorld: true},
-      (data: {endOfTheWorld: boolean}) => data.endOfTheWorld ? "Seems pretty serious" : "Could be worse"
+      (data: {endOfTheWorld: boolean}) => data.endOfTheWorld ? "Seems pretty serious" : "Could be worse",
     );
     assertEqualErrors(incident, {
-      cause: cause,
+      cause,
       name: "Incident",
       data: {endOfTheWorld: true},
-      message: "Seems pretty serious"
+      message: "Seems pretty serious",
     });
   });
 
   it("Incident(       name, data           )", function () {
     const incident: Incident<"AintNobodyGotTimeForMessages", {timeForMessages: number}, undefined> = Incident(
       "AintNobodyGotTimeForMessages",
-      {timeForMessages: 0}
+      {timeForMessages: 0},
     );
     assertEqualErrors(incident, {
       name: "AintNobodyGotTimeForMessages",
       data: {timeForMessages: 0},
-      message: ""
+      message: "",
     });
   });
 
@@ -587,12 +592,12 @@ describe("Incident(...)", function () {
     const incident: Incident<"RegExp", {regExp: RegExp}, undefined> = Incident(
       "RegExp",
       {regExp: htmlRegExp},
-      "Now you have two errors"
+      "Now you have two errors",
     );
     assertEqualErrors(incident, {
       name: "RegExp",
       data: {regExp: htmlRegExp},
-      message: "Now you have two errors"
+      message: "Now you have two errors",
     });
   });
 
@@ -601,12 +606,12 @@ describe("Incident(...)", function () {
     const incident: Incident<"RegExp", {regex: RegExp}, undefined> = Incident(
       "RegExp",
       {regex: antiRegExp},
-      (data: {regex: RegExp}) => `The RegExp for ${JSON.stringify(data.regex.source)} does not want to cooperate`
+      (data: {regex: RegExp}) => `The RegExp for ${JSON.stringify(data.regex.source)} does not want to cooperate`,
     );
     assertEqualErrors(incident, {
       name: "RegExp",
       data: {regex: antiRegExp},
-      message: `The RegExp for "[^]" does not want to cooperate`
+      message: 'The RegExp for "[^]" does not want to cooperate',
     });
   });
 
@@ -615,7 +620,7 @@ describe("Incident(...)", function () {
     assertEqualErrors(incident, {
       name: Incident.name,
       data: {port: 50313},
-      message: ""
+      message: "",
     });
   });
 
@@ -625,7 +630,7 @@ describe("Incident(...)", function () {
     assertEqualErrors(incident, {
       name: Incident.name,
       data: {foo: "bar"},
-      message: "Foo/Bar"
+      message: "Foo/Bar",
     });
   });
 
@@ -634,7 +639,7 @@ describe("Incident(...)", function () {
     assertEqualErrors(incident, {
       name: Incident.name,
       data: {bar: "foo"},
-      message: "Bar/Foo"
+      message: "Bar/Foo",
     });
   });
 });
@@ -646,7 +651,7 @@ describe("Incident(error)", function () {
     assertEqualErrors(incident, {
       name: "Error",
       data: {},
-      message: "Simple error"
+      message: "Simple error",
     });
     assert.instanceOf(incident, Incident);
   });
@@ -657,14 +662,14 @@ describe("Incident(error)", function () {
       cause,
       "UdpJoke",
       {rating: Infinity},
-      "I'd tell you a UDP joke, but you might not get it."
+      "I'd tell you a UDP joke, but you might not get it.",
     );
     const incident: Incident<"UdpJoke", {rating: number}, Error> = Incident(base);
     assertEqualErrors(incident, {
       name: "UdpJoke",
       data: {rating: Infinity},
       message: "I'd tell you a UDP joke, but you might not get it.",
-      cause: cause
+      cause,
     });
     assert.instanceOf(incident, Incident);
     assert.notEqual(incident, base);
@@ -700,7 +705,7 @@ describe("Lazy message", function () {
       "after-read",
       "before-read2",
       "after-read2",
-      "end-of-exec"
+      "end-of-exec",
     ]);
   });
 
@@ -732,7 +737,7 @@ describe("Lazy message", function () {
       "after-read",
       "before-read2",
       "after-read2",
-      "end-of-exec"
+      "end-of-exec",
     ]);
   });
 
@@ -768,7 +773,7 @@ describe("Lazy message", function () {
       "after-throw",
       "before-throw2",
       "after-throw2",
-      "end-of-exec"
+      "end-of-exec",
     ]);
   });
 
@@ -798,7 +803,7 @@ describe("Lazy message", function () {
       "before-read",
       "message-evaluation",
       "after-read",
-      "end-of-exec"
+      "end-of-exec",
     ]);
   });
 });
@@ -810,10 +815,12 @@ describe("Discriminated union", function () {
         name: "SyntaxError";
         index: number;
       }
+
       interface TypeError {
         name: "TypeError";
         typeName: string;
       }
+
       type BaseError = SyntaxError | TypeError;
 
       function printError(error: BaseError): void {
@@ -824,6 +831,8 @@ describe("Discriminated union", function () {
           case "TypeError":
             const typename: string = error.typeName;
             break;
+          default:
+            throw new Incident("UnexpectedVariant", {value: error!.name});
         }
       }
     }
@@ -852,6 +861,8 @@ describe("Discriminated union", function () {
           case "TypeError":
             const typename: string = error.data.typeName;
             break;
+          default:
+            throw new Incident("UnexpectedVariant", {value: error!.name});
         }
       }
     }
@@ -871,6 +882,8 @@ describe("Discriminated union", function () {
           case "TypeError":
             const typename: string = error.data.typeName;
             break;
+          default:
+            throw new Incident("UnexpectedVariant", {value: error!.name});
         }
       }
     }

@@ -1,4 +1,2 @@
-import {Incident} from "./incident";
-export {Incident}
-export {StaticIncident} from "./interfaces";
-export  default Incident;
+export { Incident } from "./incident";
+export { StaticIncident } from "./interfaces";
