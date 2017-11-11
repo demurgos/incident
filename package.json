@@ -1,7 +1,7 @@
 {
   "name": "incident",
   "version": "2.0.0",
-  "description": "Simple powerful errors",
+  "description": "Errors with superpowers",
   "private": true,
   "main": "dist/lib/index.js",
   "types": "dist/lib/index.d.ts",
