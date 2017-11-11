@@ -1,4 +1,4 @@
-import { Incident as Interface, StaticIncident as StaticInterface } from "./interfaces";
+import { Incident as Interface, StaticIncident as StaticInterface } from "./types";
 
 /**
  * Define a hidden property

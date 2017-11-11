@@ -1,2 +1,2 @@
 export { Incident } from "./incident";
-export { StaticIncident } from "./interfaces";
+export { StaticIncident } from "./types";
