@@ -4,7 +4,7 @@
 [![Build status](https://img.shields.io/travis/demurgos/incident/master.svg?maxAge=2592000)](https://travis-ci.org/demurgos/incident)
 [![GitHub repository](https://img.shields.io/badge/Github-demurgos%2Fincident-blue.svg)](https://github.com/demurgos/incident)
 
-Simple powerful errors for Typescript and Javascript.
+Errors with superpowers.
 
 ## Installation
 
@@ -25,34 +25,11 @@ npm install --save incident
 - Lazy stack capture and support for lazy message formatter: never called if not needed
 - No dependencies
 
-```typescript
-// Example of type resolution on a discriminated type
-import Incident from "incident";
+## Migration from version 2
 
-// Associate the name "SyntaxError" to {index: number}
-type SyntaxError = Incident<"SyntaxError", {index: number}, undefined>;
-// Associate the name "TypeError" to {typeName: string}
-type TypeError = Incident<"TypeError", {typeName: string}, undefined>;
-// Created a discriminated type
-type BaseError = SyntaxError | TypeError;
-
-// Example usage accepting the discriminated type
-function printError(error: BaseError): void {
-  // Switch on the discriminant
-  switch (error.name) {
-    case "SyntaxError":
-      // No need to cast: successfully resolved to SyntaxError
-      const index: number = error.data.index;
-      console.log(`Received a syntax error with index: ${index}`);
-      break;
-    case "TypeError":
-      // Successfully resolved to TypeError
-      const typename: string = error.data.typeName;
-      console.log(`Received a type error with typename: ${typename}`);
-      break;
-  }
-}
-```
+Ensure that each of you always provide a `name`. You should mainly look for `new Incident(message)` and
+`new Incident(cause, message)` which would be interpreted as `new Incident(name)` and `new Incident(cause, name)`
+in version 3.
 
 ## Why
 
@@ -82,7 +59,8 @@ I'd like to keep the usage simple. For example, I have experimented with a array
 an error has multiple simultaneous causes).
 The displayed messages were pretty good but it made the code to handle the errors automatically
 pretty complex because the type for the cause was `Error | Error[] | undefined`.
-This feature did not even make it to the version 1. If you need 
+This feature did not even make it to the version 1. If you need it, but your multiple reasons
+in the `data` object.
 
 Finally, performance is also a goal. That's why the library performs late / lazy stack capture
 and allows for message formatters that are called only when needed.
@@ -147,14 +125,15 @@ stack of the cause if there is any.
 ### Constructor
 
 ```typescript
-new Incident<Name, Data, Cause>([cause,] [name,] [data,] [message]);
+new Incident<Name, Data, Cause>([cause,] name, [data,] [message]);
 ```
 
 You can pass almost any combination of parameters you want as long as it is in the
-right order (see table below for the details). If you want to explicitly define the
-generic parameters, you don't have to define the generic parameter for a function parameter
-you do not use. Instanciating a new Incident instance will perform a lazy capture
-of the current call stack (only resolved when reading `.stack` or throwing the error).
+right order (see table below for the details) and a name is specified. If you want
+to explicitly define the generic parameters, you don't have to define the generic
+parameter for a function parameter you do not use. Instanciating a new Incident
+instance will perform a lazy capture of the current call stack (only resolved when
+reading `.stack` or throwing the error).
 
 - **cause**
   - Type: `Cause`
@@ -168,6 +147,7 @@ of the current call stack (only resolved when reading `.stack` or throwing the e
   - Type constraint: `Name extends string`
   - Default type: `"Incident"`
   - Default value: `"Incident"`
+  - **Required**
   - Description: A name allowing to discriminate the error data and cause.
 
 - **data**
@@ -191,19 +171,11 @@ of the current call stack (only resolved when reading `.stack` or throwing the e
 
 |cause|name |data |message| Comment                                                            |
 |:---:|:---:|:---:|:-----:|:-------------------------------------------------------------------|
-|     |     |     |       |`new(): Incident<"Incident", {}, undefined>`                        |
-|     |     |     |   ✔   |`new(...): Incident<"Incident", {}, undefined>`                     |
-|     |     |  ✔  |       |`new<Data>(...): Incident<"Incident", Data, undefined>`             |
-|     |     |  ✔  |   ✔   |`new<Data>(...): Incident<"Incident", Data, undefined>`             |
-|     |  ✘  |     |       |**Not possible**, use `new Incident(name, "")`                      |
+|     |  ✔  |     |       |`new<Name>(...): Incident<Name, {}, undefined>`                     |
 |     |  ✔  |     |   ✔   |`new<Name>(...): Incident<Name, {}, undefined>`                     |
 |     |  ✔  |  ✔  |       |`new<Name, Data>(...): Incident<Name, Data, undefined>`             |
 |     |  ✔  |  ✔  |   ✔   |`new<Name, Data>(...): Incident<Name, Data, undefined>`             |
-|  ✘  |     |     |       |**Not possible**, use `new Incident(cause, "")` or `Incident(cause)`|
-|  ✔  |     |     |   ✔   |`new<Cause>(...): Incident<"Incident", {}, Cause>`                  |
-|  ✔  |     |  ✔  |       |`new<Data, Cause>(...): Incident<"Incident", Data, Cause>`          |
-|  ✔  |     |  ✔  |   ✔   |`new<Data, Cause>(...): Incident<"Incident", Data, Cause>`          |
-|  ✘  |  ✘  |     |       |**Not possible**, use `new Incident(cause, name, "")`               |
+|  ✔  |  ✔  |     |       |`new<Name, Cause>(...): Incident<Name, {}, Cause>`                  |
 |  ✔  |  ✔  |     |   ✔   |`new<Name, Cause>(...): Incident<Name, {}, Cause>`                  |
 |  ✔  |  ✔  |  ✔  |       |`new<Name, Data, Cause>(...): Incident<Name, Data, Cause>`          |
 |  ✔  |  ✔  |  ✔  |   ✔   |`new<Name, Data, Cause>(...): Incident<Name, Data, Cause>`          |
@@ -225,22 +197,47 @@ created. If you added extra properties, they will be lost.
 
 |cause|name |data |message| Comment                                                  |
 |:---:|:---:|:---:|:-----:|:---------------------------------------------------------|
+|  ✔  |     |     |       |**Converts to an instance of this `Incident` constructor**|
 |     |     |     |       |`(): Incident<"Incident", {}, undefined>`                 |
-|     |     |     |   ✔   |`(...): Incident<"Incident", {}, undefined>`              |
-|     |     |  ✔  |       |`<Data>(...): Incident<"Incident", Data, undefined>`      |
-|     |     |  ✔  |   ✔   |`<Data>(...): Incident<"Incident", Data, undefined>`      |
-|     |  ✘  |     |       |**Not possible**, use `Incident(name, "")`                |
+|     |  ✔  |     |       |`<Name>(...): Incident<Name, {}, undefined>`              |
 |     |  ✔  |     |   ✔   |`<Name>(...): Incident<Name, {}, undefined>`              |
 |     |  ✔  |  ✔  |       |`new<Name, Data>(...): Incident<Name, Data, undefined>`   |
 |     |  ✔  |  ✔  |   ✔   |`<Name, Data>(...): Incident<Name, Data, undefined>`      |
-|  ✔  |     |     |       |**Converts to an instance of this `Incident` constructor**|
-|  ✔  |     |     |   ✔   |`<Cause>(...): Incident<"Incident", {}, Cause>`           |
-|  ✔  |     |  ✔  |       |`<Data, Cause>(...): Incident<"Incident", Data, Cause>`   |
-|  ✔  |     |  ✔  |   ✔   |`<Data, Cause>(...): Incident<"Incident", Data, Cause>`   |
-|  ✘  |  ✘  |     |       |**Not possible**, use `Incident(cause, name, "")`         |
+|  ✔  |  ✔  |     |       |`<Name, Cause>(...): Incident<Name, {}, Cause>`           |
 |  ✔  |  ✔  |     |   ✔   |`<Name, Cause>(...): Incident<Name, {}, Cause>`           |
 |  ✔  |  ✔  |  ✔  |       |`<Name, Data, Cause>(...): Incident<Name, Data, Cause>`   |
 |  ✔  |  ✔  |  ✔  |   ✔   |`<Name, Data, Cause>(...): Incident<Name, Data, Cause>`   |
+
+## Discriminated union
+
+```typescript
+// Example of type resolution on a discriminated type
+import Incident from "incident";
+
+// Associate the name "SyntaxError" to {index: number}
+type SyntaxError = Incident<"SyntaxError", {index: number}, undefined>;
+// Associate the name "TypeError" to {typeName: string}
+type TypeError = Incident<"TypeError", {typeName: string}, undefined>;
+// Created a discriminated type
+type BaseError = SyntaxError | TypeError;
+
+// Example usage accepting the discriminated type
+function printError(error: BaseError): void {
+  // Switch on the discriminant
+  switch (error.name) {
+    case "SyntaxError":
+      // No need to cast: successfully resolved to SyntaxError
+      const index: number = error.data.index;
+      console.log(`Received a syntax error with index: ${index}`);
+      break;
+    case "TypeError":
+      // Successfully resolved to TypeError
+      const typename: string = error.data.typeName;
+      console.log(`Received a type error with typename: ${typename}`);
+      break;
+  }
+}
+```
 
 ## License
 
