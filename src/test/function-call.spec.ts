@@ -3,9 +3,9 @@ import { assertEqualErrors } from "./helpers";
 
 describe("Incident(...)", function () {
   it("Incident(cause, name,       message  )", function () {
-    type Cause = Incident<"QuantumEffect", {}, undefined>;
+    type Cause = Incident<{}, "QuantumEffect", undefined>;
     const cause: Cause = Incident("QuantumEffect", "What is even a cause?");
-    const incident: Incident<"Quantum", {}, Cause> = Incident(cause, "Quantum", "Quantum stuff is rad but weird");
+    const incident: Incident<{}, "Quantum", Cause> = Incident(cause, "Quantum", "Quantum stuff is rad but weird");
     assertEqualErrors(incident, {
       cause,
       name: "Quantum",
@@ -16,10 +16,10 @@ describe("Incident(...)", function () {
 
   it("Incident(cause, name,       formatter)", function () {
     // These stunts are performed by trained professionals, don't try this at home
-    type Cause = Incident<"NotANumber", {value: number}, undefined>;
+    type Cause = Incident<{value: number}, "NotANumber", undefined>;
     const numberBox: {value: number} = {value: NaN};
     const cause: Cause = Incident("NotANumber", numberBox, "The number box contains NaN");
-    const incident: Incident<"NotABox", {}, Cause> = Incident(
+    const incident: Incident<{}, "NotABox", Cause> = Incident(
       cause,
       "NotABox",
       () => `Error with the number box containing ${numberBox.value}`,
@@ -35,7 +35,7 @@ describe("Incident(...)", function () {
   });
 
   it("Incident(       name,       message  )", function () {
-    const incident: Incident<"MajorAlert", {}, undefined> = Incident("MajorAlert", "Unable to fire the reactor!");
+    const incident: Incident<{}, "MajorAlert", undefined> = Incident("MajorAlert", "Unable to fire the reactor!");
     assertEqualErrors(incident, {
       name: "MajorAlert",
       data: {},
@@ -44,7 +44,7 @@ describe("Incident(...)", function () {
   });
 
   it("Incident(       name,       formatter)", function () {
-    const incident: Incident<"MinorAlert", {}, undefined> = Incident("MinorAlert", () => "The reactor is on fire!");
+    const incident: Incident<{}, "MinorAlert", undefined> = Incident("MinorAlert", () => "The reactor is on fire!");
     assertEqualErrors(incident, {
       name: "MinorAlert",
       data: {},
@@ -53,10 +53,10 @@ describe("Incident(...)", function () {
   });
 
   it("Incident(cause, name, data,          )", function () {
-    type Cause = Incident<"NeedForEasyErrorManagement", {}, undefined>;
+    type Cause = Incident<{}, "NeedForEasyErrorManagement", undefined>;
     const cause: Cause = Incident("NeedForEasyErrorManagement", "");
     const now: Date = new Date();
-    const incident: Incident<"Incident", {homepage: string; author: string}, Cause> = Incident(
+    const incident: Incident<{homepage: string; author: string}, "Incident", Cause> = Incident(
       cause,
       "Incident",
       {homepage: "https://github.com/demurgos/incident", author: "Demurgos"},
@@ -70,10 +70,10 @@ describe("Incident(...)", function () {
   });
 
   it("Incident(cause, name, data, message  )", function () {
-    type Cause = Incident<"Http", {status: number}, undefined>;
+    type Cause = Incident<{status: number}, "Http", undefined>;
     const cause: Cause = Incident("Http", {status: 200}, "200 - OK");
     const now: Date = new Date();
-    const incident: Incident<"Surprise", {time: Date}, Cause> = Incident(
+    const incident: Incident<{time: Date}, "Surprise", Cause> = Incident(
       cause,
       "Surprise",
       {time: now},
@@ -90,10 +90,10 @@ describe("Incident(...)", function () {
   it("Incident(cause, name, data, formatter)", function () {
     enum Unit {Kelvin, Celsius, Farenheit}
 
-    type Cause = Incident<"Temperature", {temperature: number; unit: Unit}, undefined>;
+    type Cause = Incident<{temperature: number; unit: Unit}, "Temperature", undefined>;
     // Sorry if you use imperial units
     const cause: Cause = Incident("Temperature", {temperature: -273.15, unit: Unit.Celsius}, "It's 0K");
-    const incident: Incident<"AbstractErrorFactoryProvider", {endOfTheWorld: boolean}, Cause> = Incident(
+    const incident: Incident<{endOfTheWorld: boolean}, "AbstractErrorFactoryProvider", Cause> = Incident(
       cause,
       "AbstractErrorFactoryProvider",
       {endOfTheWorld: true},
@@ -108,7 +108,7 @@ describe("Incident(...)", function () {
   });
 
   it("Incident(       name, data           )", function () {
-    const incident: Incident<"MysteriousPort", {port: number}, undefined> = Incident("MysteriousPort", {port: 50313});
+    const incident: Incident<{port: number}, "MysteriousPort", undefined> = Incident("MysteriousPort", {port: 50313});
     assertEqualErrors(incident, {
       name: "MysteriousPort",
       data: {port: 50313},
@@ -118,7 +118,7 @@ describe("Incident(...)", function () {
 
   it("Incident(       name, data, message  )", function () {
     // You know you're getting tired of coming up with errors when you resort to foo & bar...
-    const incident: Incident<"Unimaginative", {foo: string}, undefined> = Incident(
+    const incident: Incident<{foo: string}, "Unimaginative", undefined> = Incident(
       "Unimaginative",
       {foo: "bar"},
       "Foo/Bar",
@@ -131,7 +131,7 @@ describe("Incident(...)", function () {
   });
 
   it("Incident(       name, data, formatter)", function () {
-    const incident: Incident<"UnimaginativeAndLazy", {bar: string}, undefined> = Incident(
+    const incident: Incident<{bar: string}, "UnimaginativeAndLazy", undefined> = Incident(
       "UnimaginativeAndLazy",
       {bar: "foo"},
       () => "Bar/Foo",

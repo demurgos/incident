@@ -31,6 +31,7 @@ npm install --save incident
 Ensure that each of you always provide a `name`. You should mainly look for `new Incident(message)` and
 `new Incident(cause, message)` which would be interpreted as `new Incident(name)` and `new Incident(cause, name)`
 in version 3.
+Also note that the order of the generic parameters changed from `<Name, Data, Cause>` to `<Data, Name, Cause>`.
 
 ## Why
 
@@ -81,7 +82,11 @@ interface Incident; // Interface of the instance
 An `Incident` has the following interface:
 
 ```typescript
-interface Incident<Name extends string, Data extends {}, Cause extends (Error | undefined)> extends Error {
+interface Incident<
+  Data extends object,
+  Name extends string = string,
+  Cause extends (Error | undefined) = (Error | undefined)
+> extends Error {
   name: Name;
   message: string;
   data: Data;
@@ -128,7 +133,7 @@ stack of the cause if there is any.
 ### Constructor
 
 ```typescript
-new Incident<Name, Data, Cause>([cause,] name, [data,] [message]);
+new Incident<Data, Name, Cause>([cause,] name, [data,] [message]);
 ```
 
 You can pass almost any combination of parameters you want as long as it is in the
@@ -148,15 +153,14 @@ reading `.stack` or throwing the error).
 - **name**
   - Type: `Name`
   - Type constraint: `Name extends string`
-  - Default type: `"Incident"`
-  - Default value: `"Incident"`
+  - Default type: `string`
   - **Required**
   - Description: A name allowing to discriminate the error data and cause.
 
 - **data**
   - Type: `Data`
-  - Type constraint: `Data extends {}`
-  - Default type: `{}`
+  - Type constraint: `Data extends object`
+  - Default type: `object`
   - Default value: `{}`
   - Description: A data object completely describing the error.
 
@@ -172,16 +176,16 @@ reading `.stack` or throwing the error).
 
 `new` operator signatures table
 
-|cause|name |data |message| Comment                                                            |
-|:---:|:---:|:---:|:-----:|:-------------------------------------------------------------------|
-|     |  ✔  |     |       |`new<Name>(...): Incident<Name, {}, undefined>`                     |
-|     |  ✔  |     |   ✔   |`new<Name>(...): Incident<Name, {}, undefined>`                     |
-|     |  ✔  |  ✔  |       |`new<Name, Data>(...): Incident<Name, Data, undefined>`             |
-|     |  ✔  |  ✔  |   ✔   |`new<Name, Data>(...): Incident<Name, Data, undefined>`             |
-|  ✔  |  ✔  |     |       |`new<Name, Cause>(...): Incident<Name, {}, Cause>`                  |
-|  ✔  |  ✔  |     |   ✔   |`new<Name, Cause>(...): Incident<Name, {}, Cause>`                  |
-|  ✔  |  ✔  |  ✔  |       |`new<Name, Data, Cause>(...): Incident<Name, Data, Cause>`          |
-|  ✔  |  ✔  |  ✔  |   ✔   |`new<Name, Data, Cause>(...): Incident<Name, Data, Cause>`          |
+|cause|name |data |message| Comment                                                  |
+|:---:|:---:|:---:|:-----:|:---------------------------------------------------------|
+|     |  ✔  |     |       |`new<Name>(...): Incident<Name, object, undefined>`       |
+|     |  ✔  |     |   ✔   |`new<Name>(...): Incident<Name, object, undefined>`       |
+|     |  ✔  |  ✔  |       |`new<Data, Name>(...): Incident<Name, Data, undefined>`   |
+|     |  ✔  |  ✔  |   ✔   |`new<Data, Name>(...): Incident<Name, Data, undefined>`   |
+|  ✔  |  ✔  |     |       |`new<Name, Cause>(...): Incident<Name, object, Cause>`    |
+|  ✔  |  ✔  |     |   ✔   |`new<Name, Cause>(...): Incident<Name, object, Cause>`    |
+|  ✔  |  ✔  |  ✔  |       |`new<Data, Name, Cause>(...): Incident<Name, Data, Cause>`|
+|  ✔  |  ✔  |  ✔  |   ✔   |`new<Data, Name, Cause>(...): Incident<Name, Data, Cause>`|
 
 ### Call
 
@@ -201,15 +205,14 @@ created. If you added extra properties, they will be lost.
 |cause|name |data |message| Comment                                                  |
 |:---:|:---:|:---:|:-----:|:---------------------------------------------------------|
 |  ✔  |     |     |       |**Converts to an instance of this `Incident` constructor**|
-|     |     |     |       |`(): Incident<"Incident", {}, undefined>`                 |
-|     |  ✔  |     |       |`<Name>(...): Incident<Name, {}, undefined>`              |
-|     |  ✔  |     |   ✔   |`<Name>(...): Incident<Name, {}, undefined>`              |
-|     |  ✔  |  ✔  |       |`new<Name, Data>(...): Incident<Name, Data, undefined>`   |
-|     |  ✔  |  ✔  |   ✔   |`<Name, Data>(...): Incident<Name, Data, undefined>`      |
-|  ✔  |  ✔  |     |       |`<Name, Cause>(...): Incident<Name, {}, Cause>`           |
-|  ✔  |  ✔  |     |   ✔   |`<Name, Cause>(...): Incident<Name, {}, Cause>`           |
-|  ✔  |  ✔  |  ✔  |       |`<Name, Data, Cause>(...): Incident<Name, Data, Cause>`   |
-|  ✔  |  ✔  |  ✔  |   ✔   |`<Name, Data, Cause>(...): Incident<Name, Data, Cause>`   |
+|     |  ✔  |     |       |`<Name>(...): Incident<Name, object, undefined>`          |
+|     |  ✔  |     |   ✔   |`<Name>(...): Incident<Name, object, undefined>`          |
+|     |  ✔  |  ✔  |       |`<Data, Name>(...): Incident<Name, Data, undefined>`      |
+|     |  ✔  |  ✔  |   ✔   |`<Data, Name>(...): Incident<Name, Data, undefined>`      |
+|  ✔  |  ✔  |     |       |`<Name, Cause>(...): Incident<Name, object, Cause>`       |
+|  ✔  |  ✔  |     |   ✔   |`<Name, Cause>(...): Incident<Name, object, Cause>`       |
+|  ✔  |  ✔  |  ✔  |       |`<Data, Name, Cause>(...): Incident<Name, Data, Cause>`   |
+|  ✔  |  ✔  |  ✔  |   ✔   |`<Data, Name, Cause>(...): Incident<Name, Data, Cause>`   |
 
 ## Discriminated union
 

@@ -1,8 +1,10 @@
 # Next
 
 - **[Breaking change]** Require error name.
-- **[Feature]** If present, use `data` to generate the default message.
 - **[Breaking change]** Drop support for browser build (es5): use your own transpiler if you need it.
+- **[Breaking change]** Change order of generic parameters to `<Data, Name, Cause>` (from `<Name, Data, Cause>`).
+- **[Feature]** If present, use `data` to generate the default message.
+- **[Feature]** Provide default values for interface parameters
 - **[Fix]** Support strict variance of the formatter function.
 - **[Internal]** Add a few tests to ensure that the prototype chain is preserved.
 - **[Internal]** Update project tools and enable continuous deployment.

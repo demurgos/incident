@@ -7,7 +7,7 @@ describe("Lazy message", function () {
 
     function exec() {
       callOrder.push("start-of-exec");
-      const incident: Incident<"Lazy", {}, undefined> = new Incident("Lazy", (): string => {
+      const incident: Incident<object, "Lazy", undefined> = new Incident("Lazy", (): string => {
         callOrder.push("message-evaluation");
         return "Lazy error";
       });
@@ -39,7 +39,7 @@ describe("Lazy message", function () {
 
     function exec() {
       callOrder.push("start-of-exec");
-      const incident: Incident<"Lazy", {}, undefined> = new Incident("Lazy", (): string => {
+      const incident: Incident<object, "Lazy", undefined> = new Incident("Lazy", (): string => {
         callOrder.push("message-evaluation");
         return "Lazy error";
       });
@@ -71,7 +71,7 @@ describe("Lazy message", function () {
 
     function exec() {
       callOrder.push("start-of-exec");
-      const incident: Incident<"Lazy", {}, undefined> = new Incident("Lazy", (): string => {
+      const incident: Incident<object, "Lazy", undefined> = new Incident("Lazy", (): string => {
         callOrder.push("message-evaluation");
         return "Lazy error";
       });
@@ -107,12 +107,12 @@ describe("Lazy message", function () {
 
     function exec() {
       callOrder.push("start-of-exec");
-      const base: Incident<"Lazy", {}, undefined> = new Incident("Lazy", (): string => {
+      const base: Incident<object, "Lazy", undefined> = new Incident("Lazy", (): string => {
         callOrder.push("message-evaluation");
         return "Lazy error";
       });
       callOrder.push("created-base");
-      const copy: Incident<"Lazy", {}, undefined> = Incident(base);
+      const copy: Incident<object, "Lazy", undefined> = Incident(base);
       callOrder.push("after-copy");
       callOrder.push("before-read");
       assert.isString(copy.message);

@@ -1,7 +1,8 @@
 import { assert } from "chai";
 import { Incident } from "../lib/index";
 
-export interface IncidentLike<N extends string, D extends {}, C extends (Error | undefined)> {
+// tslint:disable-next-line:max-line-length
+export interface IncidentLike<D extends object, N extends string = string, C extends (Error | undefined) = (Error | undefined)> {
   message: string;
   name: N;
   data: D;
@@ -9,9 +10,10 @@ export interface IncidentLike<N extends string, D extends {}, C extends (Error |
   stack?: string;
 }
 
-export function assertEqualErrors<N extends string, D extends {}, C extends (Error | undefined)>(
-  actual: Incident<N, D, C>,
-  expected: IncidentLike<N, D, C>,
+// tslint:disable-next-line:max-line-length
+export function assertEqualErrors<D extends object, N extends string = string, C extends (Error | undefined) = (Error | undefined)>(
+  actual: Incident<D, N, C>,
+  expected: IncidentLike<D, N, C>,
 ): void | never {
   for (const key in expected) {
     const actualProperty: any = (<any> actual)[key];

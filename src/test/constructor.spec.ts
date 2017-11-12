@@ -3,9 +3,9 @@ import { assertEqualErrors } from "./helpers";
 
 describe("new Incident(...)", function () {
   it("new Incident(cause, name,       message  )", function () {
-    type Cause = Incident<"Hardware", {}, undefined>;
+    type Cause = Incident<{}, "Hardware", undefined>;
     const cause: Cause = new Incident("Hardware", "This is a hardware issue");
-    const incident: Incident<"LightBulb", {}, Cause> = new Incident(cause, "LightBulb", "Unable to change light bulb");
+    const incident: Incident<{}, "LightBulb", Cause> = new Incident(cause, "LightBulb", "Unable to change light bulb");
     assertEqualErrors(incident, {
       cause,
       name: "LightBulb",
@@ -15,9 +15,9 @@ describe("new Incident(...)", function () {
   });
 
   it("new Incident(cause, name,       formatter)", function () {
-    type Cause = Incident<"CauseNotFound", {}, undefined>;
+    type Cause = Incident<{}, "CauseNotFound", undefined>;
     const cause: Cause = new Incident("CauseNotFound", "Unable to find a cause to test with");
-    const incident: Incident<"CauseFound", {}, Cause> = new Incident(
+    const incident: Incident<{}, "CauseFound", Cause> = new Incident(
       cause,
       "CauseFound",
       () => "Found a cause",
@@ -31,7 +31,7 @@ describe("new Incident(...)", function () {
   });
 
   it("new Incident(       name,       message  )", function () {
-    const incident: Incident<"paradoxError", {}, undefined> = new Incident("paradoxError", "This is not an error");
+    const incident: Incident<{}, "paradoxError", undefined> = new Incident("paradoxError", "This is not an error");
     assertEqualErrors(incident, {
       name: "paradoxError",
       data: {},
@@ -40,7 +40,7 @@ describe("new Incident(...)", function () {
   });
 
   it("new Incident(       name,       formatter)", function () {
-    type ParadoxError = Incident<"paradoxError", {}, undefined>;
+    type ParadoxError = Incident<{}, "paradoxError", undefined>;
     const incident: ParadoxError = new Incident("paradoxError", () => "This is not an error");
     assertEqualErrors(incident, {
       name: "paradoxError",
@@ -50,9 +50,9 @@ describe("new Incident(...)", function () {
   });
 
   it("new Incident(cause, name, data,          )", function () {
-    type Cause = Incident<"WrapMe", {}, undefined>;
+    type Cause = Incident<{}, "WrapMe", undefined>;
     const cause: Cause = new Incident("WrapMe", "This error justs draws attention to itself");
-    const incident: Incident<"SimpleWrapper", {simple: true}, Cause> = new Incident(
+    const incident: Incident<{simple: true}, "SimpleWrapper", Cause> = new Incident(
       cause,
       "SimpleWrapper",
       {simple: true as true},
@@ -67,9 +67,9 @@ describe("new Incident(...)", function () {
 
   it("new Incident(cause, name, data, message  )", function () {
     // Trivia: `example.com` is a special domain reserved by the IANA, anyone can use it for illustrative purposes
-    type Cause = Incident<"ConnectionLost", {}, undefined>;
+    type Cause = Incident<{}, "ConnectionLost", undefined>;
     const cause: Cause = new Incident("ConnectionLost", "Lost connection");
-    const incident: Incident<"Network", {uri: string}, Cause> = new Incident(
+    const incident: Incident<{uri: string}, "Network", Cause> = new Incident(
       cause,
       "Network",
       {uri: "example.com"},
@@ -84,9 +84,9 @@ describe("new Incident(...)", function () {
   });
 
   it("new Incident(cause, name, data, formatter)", function () {
-    type Cause = Incident<"MinLength", {minLength: number}, undefined>;
+    type Cause = Incident<{minLength: number}, "MinLength", undefined>;
     const cause: Cause = new Incident("MinLength", {minLength: 59}, "Value must have `.length` ≥ 59");
-    const incident: Incident<"InvalidCityName", {value: string}, Cause> = new Incident(
+    const incident: Incident<{value: string}, "InvalidCityName", Cause> = new Incident(
       cause,
       "InvalidCityName",
       {value: "Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch"},
@@ -101,7 +101,7 @@ describe("new Incident(...)", function () {
   });
 
   it("new Incident(       name, data           )", function () {
-    const incident: Incident<"AintNobodyGotTimeForMessages", {timeForMessages: number}, undefined> = new Incident(
+    const incident: Incident<{timeForMessages: number}, "AintNobodyGotTimeForMessages", undefined> = new Incident(
       "AintNobodyGotTimeForMessages",
       {timeForMessages: 0},
     );
@@ -114,7 +114,7 @@ describe("new Incident(...)", function () {
 
   it("new Incident(       name, data, message  )", function () {
     const htmlRegExp: RegExp = /<html>/;
-    const incident: Incident<"RegExp", {regExp: RegExp}, undefined> = new Incident(
+    const incident: Incident<{regExp: RegExp}, "RegExp", undefined> = new Incident(
       "RegExp",
       {regExp: htmlRegExp},
       "Now you have two errors",
@@ -128,7 +128,7 @@ describe("new Incident(...)", function () {
 
   it("new Incident(       name, data, formatter)", function () {
     const antiRegExp: RegExp = /[^]/;
-    const incident: Incident<"RegExp", {regex: RegExp}, undefined> = new Incident(
+    const incident: Incident<{regex: RegExp}, "RegExp", undefined> = new Incident(
       "RegExp",
       {regex: antiRegExp},
       (data: {regex: RegExp}) => `The RegExp for ${JSON.stringify(data.regex.source)} does not want to cooperate`,
