@@ -35,5 +35,9 @@
     "ts-node": "^3.3.0",
     "turbo-gulp": "^0.15.4",
     "typescript": "^2.6.1"
+  },
+  "dependencies": {
+    "@types/object-inspect": "^1.4.0",
+    "object-inspect": "^1.4.0"
   }
 }
