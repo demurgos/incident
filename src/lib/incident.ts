@@ -2,13 +2,13 @@ import * as objectInspect from "object-inspect";
 import { Incident as Interface, StaticIncident as StaticInterface } from "./types";
 
 /**
- * Define a hidden property
+ * Define a hidden property.
  *
  * @param obj
  * @param propertyName
  * @param value
  */
-function defineHiddenProperty(obj: {}, propertyName: string, value: any) {
+function defineHiddenProperty(obj: object, propertyName: string, value: any) {
   Object.defineProperty(obj, propertyName, {
     value,
     configurable: true,
@@ -18,13 +18,13 @@ function defineHiddenProperty(obj: {}, propertyName: string, value: any) {
 }
 
 /**
- * Define a simple property
+ * Define a normal property.
  *
  * @param obj
  * @param propertyName
  * @param value
  */
-function defineSimpleProperty(obj: {}, propertyName: string, value: any) {
+function defineSimpleProperty(obj: object, propertyName: string, value: any) {
   Object.defineProperty(obj, propertyName, {
     value,
     configurable: true,
@@ -34,14 +34,9 @@ function defineSimpleProperty(obj: {}, propertyName: string, value: any) {
 }
 
 /**
- * Used to stringify Incident errors.
- */
-const dummyError: Error = new Error();
-
-/**
  * A symbol used internally to prevent the capture of the call stack.
  */
-const noStackSymbol: Object = {};
+const noStackSymbol: object = {};
 
 // Incident factory, allows a fine control over the getter / setters
 // and will eventually allow to have TypeError, SyntaxError, etc. as super classes.
@@ -56,7 +51,8 @@ function createIncident(_super: Function): StaticInterface {
   __.prototype = _super.prototype;
   Incident.prototype = new (<any> __)();
 
-  interface PrivateIncident<N extends string, D extends {}, C extends (Error | undefined)> extends Interface<N, D, C> {
+  // tslint:disable-next-line:max-line-length
+  interface PrivateIncident<D extends object, N extends string = string, C extends (Error | undefined) = (Error | undefined)> extends Interface<D, N, C> {
     /**
      * `(data: D) => string`: A lazy formatter, called once when needed. Its result replaces `_message`
      * `string`: The resolved error message.
@@ -76,18 +72,18 @@ function createIncident(_super: Function): StaticInterface {
     _stackContainer?: {stack?: string};
   }
 
-  function Incident<N extends string, D extends {} = {}, C extends (Error | undefined) = (Error | undefined)>(
-    this: PrivateIncident<N, D, C>,
+  function Incident<D extends object, N extends string, C extends (Error | undefined) = (Error | undefined)>(
+    this: PrivateIncident<D, N, C>,
     ...args: any[],
-  ): Interface<N, D, C> | void {
+  ): Interface<D, N, C> | void {
     if (!(this instanceof Incident)) {
       switch (args.length) {
         case 0:
           return new (<any> Incident)(noStackSymbol);
         case 1:
           if (args[0] instanceof Error) {
-            const err: Error & PrivateIncident<N, D, C> = args[0];
-            let converted: PrivateIncident<N, D, C>;
+            const err: Error & PrivateIncident<D, N, C> = args[0];
+            let converted: PrivateIncident<D, N, C>;
             const name: string = err.name;
             const message: string | ((data: D) => string) = typeof err._message === "function"
               ? err._message
@@ -127,7 +123,7 @@ function createIncident(_super: Function): StaticInterface {
 
     let noStack: boolean = false;
     let name: N;
-    let data: D = {} as D;
+    let data: D | undefined = undefined;
     let cause: C | undefined = undefined;
     let message: string | ((data: D) => string);
 
@@ -157,6 +153,9 @@ function createIncident(_super: Function): StaticInterface {
         message = "";
       }
     }
+    if (data === undefined) {
+      data = {} as D;
+    }
 
     _super.call(this, typeof message === "function" ? "<non-evaluated lazy message>" : message);
 
@@ -170,13 +169,11 @@ function createIncident(_super: Function): StaticInterface {
     defineHiddenProperty(this, "_stackContainer", noStack ? undefined : new Error());
   }
 
-  Incident.prototype.Incident = Incident;
-
-  Incident.prototype.toString = function (this: PrivateIncident<string, {}, Error | undefined>): string {
-    return dummyError.toString.apply(this, arguments);
+  Incident.prototype.toString = function (this: PrivateIncident<object>): string {
+    return Error.prototype.toString.apply(this, arguments);
   };
 
-  function getMessage(this: PrivateIncident<string, {}, Error | undefined>): string {
+  function getMessage(this: PrivateIncident<object>): string {
     if (typeof this._message === "function") {
       this._message = this._message(this.data);
     }
@@ -184,14 +181,11 @@ function createIncident(_super: Function): StaticInterface {
     return this._message;
   }
 
-  function setMessage<D extends {}>(
-    this: PrivateIncident<string, D, Error | undefined>,
-    message: string | ((data: D) => string),
-  ): void {
+  function setMessage<D extends object>(this: PrivateIncident<D>, message: string | ((data: D) => string)): void {
     this._message = message;
   }
 
-  function getStack(this: PrivateIncident<string, {}, Error | undefined>): string {
+  function getStack(this: PrivateIncident<object>): string {
     if (this._stack === undefined || this._stack === null) {
       if (this._stackContainer !== undefined && this._stackContainer.stack !== undefined) {
         // This removes the firs lines corresponding to: "Error\n    at new Incident [...]"
@@ -216,7 +210,7 @@ function createIncident(_super: Function): StaticInterface {
     return this._stack;
   }
 
-  function setStack(this: PrivateIncident<string, {}, Error | undefined>, stack: string): void {
+  function setStack(this: PrivateIncident<object>, stack: string): void {
     this._stackContainer = undefined;
     this._stack = stack;
   }
@@ -241,6 +235,7 @@ function createIncident(_super: Function): StaticInterface {
 // tslint:disable-next-line:variable-name
 export const Incident: StaticInterface = createIncident(Error);
 
-export interface Incident<Name extends string, Data extends {}, Cause extends (Error | undefined)>
-  extends Interface<Name, Data, Cause> {
+// tslint:disable-next-line:max-line-length
+export interface Incident<D extends object, N extends string = string, C extends (Error | undefined) = (Error | undefined)>
+  extends Interface<D, N, C> {
 }

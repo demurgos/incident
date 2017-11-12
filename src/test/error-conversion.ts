@@ -5,7 +5,7 @@ import { assertEqualErrors } from "./helpers";
 describe("Incident(error)", function () {
   it("Incident(error: Error)", function () {
     const base: Error = new Error("Simple error");
-    const incident: Incident<string, {}, undefined> = Incident(base);
+    const incident: Incident<object, string, undefined> = Incident(base);
     assertEqualErrors(incident, {
       name: "Error",
       data: {},
@@ -14,15 +14,15 @@ describe("Incident(error)", function () {
     assert.instanceOf(incident, Incident);
   });
 
-  it("Incident(error: Incident<N, D, C>)", function () {
+  it("Incident(error: Incident<D, N, C>)", function () {
     const cause: Error = new Error("Please move along, this is just a dummy cause");
-    const base: Incident<"UdpJoke", {rating: number}, Error> = Incident(
+    const base: Incident<{rating: number}, "UdpJoke", Error> = Incident(
       cause,
       "UdpJoke",
       {rating: Infinity},
       "I'd tell you a UDP joke, but you might not get it.",
     );
-    const incident: Incident<"UdpJoke", {rating: number}, Error> = Incident(base);
+    const incident: Incident<{rating: number}, "UdpJoke", Error> = Incident(base);
     assertEqualErrors(incident, {
       name: "UdpJoke",
       data: {rating: Infinity},
