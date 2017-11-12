@@ -61,7 +61,7 @@ describe("new Incident(...)", function () {
       cause,
       name: "SimpleWrapper",
       data: {simple: true},
-      message: "",
+      message: "{ simple: true }",
     });
   });
 
@@ -108,7 +108,7 @@ describe("new Incident(...)", function () {
     assertEqualErrors(incident, {
       name: "AintNobodyGotTimeForMessages",
       data: {timeForMessages: 0},
-      message: "",
+      message: "{ timeForMessages: 0 }",
     });
   });
 

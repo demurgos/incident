@@ -14,16 +14,17 @@ npm install --save incident
 
 ## Features
 
-- Drop-in replacement for `Error`: __fully compatible with `Error`__ (both in Node and the browser)
+- Node and browser support.
 - Supports `instanceof Error` tests.
 - Built-in error causality tracking.
 - **Compatible with Typescript discriminated unions**. If you type the name, you can then use it
   as a discriminant property to resolve the type of the data and cause.
   See the example  below.
-- Compatible with prototypal inheritance and ES6 classe inheritance
+- Compatible with prototypal inheritance and ES6 class inheritance
 - Distributed with type definitions for Typescript
 - Lazy stack capture and support for lazy message formatter: never called if not needed
-- No dependencies
+- Minimal dependencies: has a single dependency on [object-inspect](https://github.com/substack/object-inspect)
+- Tiny: 3kB minized, 1kB gziped
 
 ## Migration from version 2
 
@@ -106,6 +107,8 @@ A name uniquely identifying the error. Displayed at the top of the stack.
 #### `message`
 
 A debug message for developers describing the error. Displayed at the top of the stack.
+If you provide `data` but no `message`, the message will be generate from the data using
+[object-inspect](https://github.com/substack/object-inspect) with default options.
 
 #### `data`
 

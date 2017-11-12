@@ -1,3 +1,4 @@
+import * as objectInspect from "object-inspect";
 import { Incident as Interface, StaticIncident as StaticInterface } from "./types";
 
 /**
@@ -75,7 +76,7 @@ function createIncident(_super: Function): StaticInterface {
     _stackContainer?: {stack?: string};
   }
 
-  function Incident<N extends string, D extends {}, C extends (Error | undefined)>(
+  function Incident<N extends string, D extends {} = {}, C extends (Error | undefined) = (Error | undefined)>(
     this: PrivateIncident<N, D, C>,
     ...args: any[],
   ): Interface<N, D, C> | void {
@@ -85,31 +86,32 @@ function createIncident(_super: Function): StaticInterface {
           return new (<any> Incident)(noStackSymbol);
         case 1:
           if (args[0] instanceof Error) {
-            let converted: PrivateIncident<any, any, any>;
-            // tslint:disable-next-line:strict-boolean-expressions
-            const name: string = args[0].name || "";
-            // tslint:disable-next-line:strict-boolean-expressions
-            const message: string = typeof args[0]._message === "function" ? args[0]._message : args[0].message || "";
-            if (args[0].cause instanceof Error) {
-              if (typeof args[0].data === "object") {
-                converted = new (<any> Incident)(noStackSymbol, args[0].cause, name, args[0].data, message);
+            const err: Error & PrivateIncident<N, D, C> = args[0];
+            let converted: PrivateIncident<N, D, C>;
+            const name: string = err.name;
+            const message: string | ((data: D) => string) = typeof err._message === "function"
+              ? err._message
+              : err.message;
+            if (err.cause instanceof Error) {
+              if (typeof err.data === "object") {
+                converted = new (<any> Incident)(noStackSymbol, err.cause, name, err.data, message);
               } else {
-                converted = new (<any> Incident)(noStackSymbol, args[0].cause, name, message);
+                converted = new (<any> Incident)(noStackSymbol, err.cause, name, message);
               }
             } else {
-              if (typeof args[0].data === "object") {
-                converted = new (<any> Incident)(noStackSymbol, name, args[0].data, message);
+              if (typeof err.data === "object") {
+                converted = new (<any> Incident)(noStackSymbol, name, err.data, message);
               } else {
                 converted = new (<any> Incident)(noStackSymbol, name, message);
               }
             }
-            if (args[0]._stackContainer !== undefined) {
+            if (err._stackContainer !== undefined) {
               converted._stackContainer = args[0]._stackContainer;
-            } else if (args[0]._stack === undefined) {
+            } else if (err._stack === undefined) {
               converted._stackContainer = args[0];
               converted._stack = null; // Use the stack as-is
             } else {
-              converted._stack = args[0]._stack;
+              converted._stack = err._stack;
             }
             return converted;
           }
@@ -124,29 +126,36 @@ function createIncident(_super: Function): StaticInterface {
     }
 
     let noStack: boolean = false;
-    let name: N = "Incident" as N;
+    let name: N;
     let data: D = {} as D;
     let cause: C | undefined = undefined;
-    let message: string | ((data: D) => string) = "";
+    let message: string | ((data: D) => string);
 
-    let argsLen: number = args.length;
+    const argCount: number = args.length;
     let argIndex: number = 0;
 
-    if (argsLen > 0 && args[0] === noStackSymbol) {
+    if (argCount > 0 && args[0] === noStackSymbol) {
       noStack = true;
       argIndex++;
     }
-    if (argsLen > argIndex && (typeof args[argsLen - 1] === "string" || typeof args[argsLen - 1] === "function")) {
-      message = args[--argsLen];
-    }
-    if (argIndex < argsLen && args[argIndex] instanceof Error) {
+    if (argIndex < argCount && args[argIndex] instanceof Error) {
       cause = args[argIndex++];
     }
-    if (argIndex < argsLen && typeof args[argIndex] === "string") {
-      name = args[argIndex++];
+    if (typeof args[argIndex] !== "string") {
+      throw new TypeError("Missing required `name` argument to `Incident`.");
     }
-    if (argIndex < argsLen && typeof args[argIndex] === "object") {
+    name = args[argIndex++];
+    if (argIndex < argCount && typeof args[argIndex] === "object") {
       data = args[argIndex++];
+    }
+    if (argIndex < argCount && (typeof args[argCount - 1] === "string" || typeof args[argCount - 1] === "function")) {
+      message = args[argIndex];
+    } else {
+      if (data !== undefined) {
+        message = objectInspect;
+      } else {
+        message = "";
+      }
     }
 
     _super.call(this, typeof message === "function" ? "<non-evaluated lazy message>" : message);
@@ -229,7 +238,7 @@ function createIncident(_super: Function): StaticInterface {
   return Incident as any;
 }
 
-/* tslint:disable-next-line:variable-name */
+// tslint:disable-next-line:variable-name
 export const Incident: StaticInterface = createIncident(Error);
 
 export interface Incident<Name extends string, Data extends {}, Cause extends (Error | undefined)>

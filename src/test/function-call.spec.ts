@@ -65,7 +65,7 @@ describe("Incident(...)", function () {
       cause,
       name: "Incident",
       data: {homepage: "https://github.com/demurgos/incident", author: "Demurgos"},
-      message: "",
+      message: "{ homepage: 'https://github.com/demurgos/incident', author: 'Demurgos' }",
     });
   });
 
@@ -112,7 +112,7 @@ describe("Incident(...)", function () {
     assertEqualErrors(incident, {
       name: "MysteriousPort",
       data: {port: 50313},
-      message: "",
+      message: "{ port: 50313 }",
     });
   });
 
