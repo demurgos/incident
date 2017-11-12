@@ -1,6 +1,6 @@
 {
   "name": "incident",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Errors with superpowers",
   "private": true,
   "main": "dist/lib/index.js",
