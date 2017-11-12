@@ -1,4 +1,4 @@
-# Next
+# 3.0.0 (2017-11-12)
 
 - **[Breaking change]** Require error name.
 - **[Breaking change]** Drop support for browser build (es5): use your own transpiler if you need it.
