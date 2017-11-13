@@ -9,9 +9,19 @@ node_js:
 - stable
 
 before_install:
-- npm install -g gulp-cli
+- npm install -g greenkeeper-lockfile@1
+
+before_script:
+- greenkeeper-lockfile-update
 
 script:
 - npm test
 - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-- ./tools/continuous-deployment.travis.sh
+- "./tools/continuous-deployment.travis.sh"
+
+after_script:
+- greenkeeper-lockfile-upload
+
+env:
+  global:
+    secure: Y7Q3VHDznc7vKOh7QueHvInKRzzzs9QCnVjqKXxRfUV4l9l1IyIizIAoUanntUn6mfbPjy0DF8p9LQGz4WT8IQiOkPYX4sNgShjUn/l7PCw5aC8AHxMiLPmqgYBudAszvVjDz3s4nk4e8Bo+7muawqfVLHwKm93qHiL9UtW2sQDWFzGnRO1RZvl5TeCkHxXvkGCbE+JYHLmSEcvX48U0Z2yfRs2Pvq+vXDFI5r2on9G/j6y4lSqJLzzr90YjrbUpJNaoJ31mfsu9KDgEBl6yafwALAAPHA8WEhDD23jwLagwAzswirIzDn88cfZKbU2AZM2h+sekLsiu53OyxHITcNca/cKYXw01F4JgchpJrszbXKYzUlaNpYdrHT2AhFQHW0YrQKDPwZvWC9cGRJoS8HwQmMo8/wTL+9TQInntLr+gvQX70ekphD5J43A8k9KbnXnmYWfpYoR612njwGv3o3aPGX43Nr9wlLR1FBKMNIcn7IGm9XtuCQEarqSXkqgqBO0NAQI8WqvR3P0IxfV8zLFy1fJ+hNRwM9t6ON43aACvGe+hY1jSEkWM3kpF153TtmJu9UmuXevktavkOlpzLVDYSopejf90alRD6bcVNhCCVtyLrtDjSLjkSbfuC8CpS48tk367ESq1SF/DMksKk6goHOg2ijZ/Ne7JU1zn2uY=
