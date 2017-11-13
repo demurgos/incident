@@ -1,0 +1,498 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Incident</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">Incident</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> Incident</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<h1 id="incident">Incident</h1>
+				<p><a href="https://www.npmjs.com/package/incident"><img src="https://img.shields.io/npm/v/incident.svg?maxAge=2592000" alt="npm"></a>
+					<a href="https://github.com/demurgos/incident"><img src="https://img.shields.io/badge/Github-demurgos%2Fincident-blue.svg" alt="GitHub repository"></a>
+					<a href="https://travis-ci.org/demurgos/incident"><img src="https://img.shields.io/travis/demurgos/incident/master.svg?maxAge=2592000" alt="Build status"></a>
+				<a href="https://greenkeeper.io/"><img src="https://badges.greenkeeper.io/demurgos/incident.svg" alt="Greenkeeper badge"></a></p>
+				<p>Errors with superpowers.</p>
+				<h2 id="installation">Installation</h2>
+				<pre><code class="lang-shell">npm install --save incident
+</code></pre>
+				<h2 id="features">Features</h2>
+				<ul>
+					<li>Node and browser support.</li>
+					<li>Supports <code>instanceof Error</code> tests.</li>
+					<li>Built-in error causality tracking.</li>
+					<li><strong>Compatible with Typescript discriminated unions</strong>. If you type the name, you can then use it
+						as a discriminant property to resolve the type of the data and cause.
+					See the example  below.</li>
+					<li>Compatible with prototypal inheritance and ES6 class inheritance</li>
+					<li>Distributed with type definitions for Typescript</li>
+					<li>Lazy stack capture and support for lazy message formatter: never called if not needed</li>
+					<li>Minimal dependencies: has a single dependency on <a href="https://github.com/substack/object-inspect">object-inspect</a></li>
+					<li>Tiny: 3kB minized, 1kB gziped</li>
+				</ul>
+				<h2 id="migration-from-version-2">Migration from version 2</h2>
+				<p>Ensure that each of you always provide a <code>name</code>. You should mainly look for <code>new Incident(message)</code> and
+					<code>new Incident(cause, message)</code> which would be interpreted as <code>new Incident(name)</code> and <code>new Incident(cause, name)</code>
+					in version 3.
+				Also note that the order of the generic parameters changed from <code>&lt;Name, Data, Cause&gt;</code> to <code>&lt;Data, Name, Cause&gt;</code>.</p>
+				<h2 id="why">Why</h2>
+				<p>My goal with this library was to simplify the automatic handling of errors and
+					provide better error messages. Javascript errors are not very helpful because extending
+					them and then extracting data is tedious because you need a declaration statement,
+					multiple assignations, and then match on the name that is usually the generic <code>&quot;Error&quot;</code>
+				or rely on a brittle <code>instance of</code>.</p>
+				<p>To achieve automatic error handling, the information describing the error should
+					be easily accessible programmatically. That&#39;s why you can directly pass a data object
+					to the <code>Incident</code> constructor. Being able to pass data on the fly means that you do not need a
+					declaration statement for the error separate property assignations. A key identifying the error
+					is the second requirement for automatic error handling, <code>Incident</code> simply uses the name.
+					As explained in the features, it allows to unambiguously identify the error (I&#39;d recommend to
+					always use a name). Using a name (as a string enum variant) is also more reliable than using
+					<code>instance of</code> (prototype chain lookup) to check for the type of custom errors. The two main
+					advantages are that it&#39;s easier to serialize / deserialize and is not affected by the module
+				duplication of the Node module resolution algorithm.</p>
+				<p>To provide better error messages, especially for asynchronous operations, I made the cause
+					of the error a first-class information. It allows to deal with deferred or wrapped errors
+				more pleasant: the stack trace at each step is preserved.</p>
+				<p>The library is already pretty verbose (I am waiting for generic defaults in TS 2.3) so
+					I&#39;d like to keep the usage simple. For example, I have experimented with a arrays of causes (when
+					an error has multiple simultaneous causes).
+					The displayed messages were pretty good but it made the code to handle the errors automatically
+					pretty complex because the type for the cause was <code>Error | Error[] | undefined</code>.
+					This feature did not even make it to the version 1. If you need it, but your multiple reasons
+				in the <code>data</code> object.</p>
+				<p>Finally, performance is also a goal. That&#39;s why the library performs late / lazy stack capture
+				and allows for message formatters that are called only when needed.</p>
+				<h2 id="usage">Usage</h2>
+				<h3 id="exports">Exports</h3>
+				<pre><code class="lang-typescript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Incident</span></span>; <span class="hljs-comment">// The Incident constructor</span>
+<span class="hljs-keyword">interface</span> StaticIncident; // Interface of the constructor
+<span class="hljs-keyword">interface</span> Incident; // Interface of the instance
+</code></pre>
+				<h3 id="-incident-"><code>Incident</code></h3>
+				<p>An <code>Incident</code> has the following interface:</p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">interface</span> Incident&lt;
+  Data <span class="hljs-keyword">extends</span> object,
+  Name <span class="hljs-keyword">extends</span> string = string,
+  Cause <span class="hljs-keyword">extends</span> (Error | undefined) = (Error | undefined)
+&gt; <span class="hljs-keyword">extends</span> Error {
+  name: Name;
+  message: <span class="hljs-built_in">string</span>;
+  data: Data;
+  cause: Cause;
+  stack: <span class="hljs-built_in">string</span>;
+  toString(): <span class="hljs-built_in">string</span>;
+}
+</code></pre>
+				<h3 id="generic-parameters">Generic parameters</h3>
+				<ul>
+					<li><strong>Name</strong>: The type of the name, use a literal string type to be able to switch
+					ont the name and benefit from Typescript&#39;s type discrimination.</li>
+					<li><strong>Data</strong>: The interface of the data associated to this error. Must respect <code>typeof data === &quot;object&quot;</code></li>
+					<li><strong>Cause</strong>: The type of the error cause. Use <code>undefined</code> if there is no cause.</li>
+				</ul>
+				<h3 id="attributes">Attributes</h3>
+				<h4 id="-name-"><code>name</code></h4>
+				<p>A name uniquely identifying the error. Displayed at the top of the stack.</p>
+				<h4 id="-message-"><code>message</code></h4>
+				<p>A debug message for developers describing the error. Displayed at the top of the stack.
+					If you provide <code>data</code> but no <code>message</code>, the message will be generate from the data using
+				<a href="https://github.com/substack/object-inspect">object-inspect</a> with default options.</p>
+				<h4 id="-data-"><code>data</code></h4>
+				<p>A data object associated to the error. This should describe the error enough
+				to handle it programmatically.</p>
+				<h4 id="-cause-"><code>cause</code></h4>
+				<p>A previous error that cause this error. This usually has more detail about
+				what happened.</p>
+				<h4 id="-stack-"><code>stack</code></h4>
+				<p>The error stack of the incident. Contains the standard stack frames, and the
+				stack of the cause if there is any.</p>
+				<h3 id="constructor">Constructor</h3>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">new</span> Incident&lt;Data, Name, Cause&gt;([cause,] name, [data,] [message]);
+</code></pre>
+				<p>You can pass almost any combination of parameters you want as long as it is in the
+					right order (see table below for the details) and a name is specified. If you want
+					to explicitly define the generic parameters, you don&#39;t have to define the generic
+					parameter for a function parameter you do not use. Instanciating a new Incident
+					instance will perform a lazy capture of the current call stack (only resolved when
+				reading <code>.stack</code> or throwing the error).</p>
+				<ul>
+					<li><p><strong>cause</strong></p>
+						<ul>
+							<li>Type: <code>Cause</code></li>
+							<li>Type constraint: If you provide a <code>cause</code>, <code>Cause extends Error</code> else <code>Cause</code> is <code>undefined</code>.</li>
+							<li>Default type: <code>undefined</code></li>
+							<li>Default value: <code>undefined</code></li>
+							<li>Description: A previous error that caused this Incident.</li>
+						</ul>
+					</li>
+					<li><p><strong>name</strong></p>
+						<ul>
+							<li>Type: <code>Name</code></li>
+							<li>Type constraint: <code>Name extends string</code></li>
+							<li>Default type: <code>string</code></li>
+							<li><strong>Required</strong></li>
+							<li>Description: A name allowing to discriminate the error data and cause.</li>
+						</ul>
+					</li>
+					<li><p><strong>data</strong></p>
+						<ul>
+							<li>Type: <code>Data</code></li>
+							<li>Type constraint: <code>Data extends object</code></li>
+							<li>Default type: <code>object</code></li>
+							<li>Default value: <code>{}</code></li>
+							<li>Description: A data object completely describing the error.</li>
+						</ul>
+					</li>
+					<li><p><strong>message</strong></p>
+						<ul>
+							<li>Type: <code>string | ((data?: typeof data) =&gt; string)</code></li>
+							<li>Default value: <code>&quot;&quot;</code></li>
+							<li>Description: A debug message for developers. If the message is a formatter function,
+								it will be lazily evaluated (only once) when:<ul>
+									<li>the <code>message</code> property is accessed</li>
+									<li>the <code>stack</code> property is accessed</li>
+									<li>the error is thrown</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<p><code>new</code> operator signatures table</p>
+				<table>
+					<thead>
+						<tr>
+							<th style="text-align:center">cause</th>
+							<th style="text-align:center">name</th>
+							<th style="text-align:center">data</th>
+							<th style="text-align:center">message</th>
+							<th style="text-align:left">Comment</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td style="text-align:center"></td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center"></td>
+							<td style="text-align:center"></td>
+							<td style="text-align:left"><code>new&lt;Name&gt;(...): Incident&lt;Name, object, undefined&gt;</code></td>
+						</tr>
+						<tr>
+							<td style="text-align:center"></td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center"></td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:left"><code>new&lt;Name&gt;(...): Incident&lt;Name, object, undefined&gt;</code></td>
+						</tr>
+						<tr>
+							<td style="text-align:center"></td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center"></td>
+							<td style="text-align:left"><code>new&lt;Data, Name&gt;(...): Incident&lt;Name, Data, undefined&gt;</code></td>
+						</tr>
+						<tr>
+							<td style="text-align:center"></td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:left"><code>new&lt;Data, Name&gt;(...): Incident&lt;Name, Data, undefined&gt;</code></td>
+						</tr>
+						<tr>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center"></td>
+							<td style="text-align:center"></td>
+							<td style="text-align:left"><code>new&lt;Name, Cause&gt;(...): Incident&lt;Name, object, Cause&gt;</code></td>
+						</tr>
+						<tr>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center"></td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:left"><code>new&lt;Name, Cause&gt;(...): Incident&lt;Name, object, Cause&gt;</code></td>
+						</tr>
+						<tr>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center"></td>
+							<td style="text-align:left"><code>new&lt;Data, Name, Cause&gt;(...): Incident&lt;Name, Data, Cause&gt;</code></td>
+						</tr>
+						<tr>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:left"><code>new&lt;Data, Name, Cause&gt;(...): Incident&lt;Name, Data, Cause&gt;</code></td>
+						</tr>
+					</tbody>
+				</table>
+				<h3 id="call">Call</h3>
+				<p>You can call <code>Incident</code> as a simple function. It has the same signature as
+					the <code>new</code> operator but <strong>does not capture the stack</strong>. You may want to use
+				it for higher order errors, but I recommend to capture the stack for root causes.</p>
+				<p>The simple call also supports the additional signature <code>(cause: Error)</code>.
+					This will perform a conversion from any error to an instance of the currently called
+					Incident. You can use it normalize simple errors to Incident or mitigate module
+					duplication if you rely on <code>instanceof</code>. The resulting incident will have the
+					same name, message, stack and data. If the input error was an Incident with
+					a lazy message or stack, it will remain non-evaluated.
+					If the argument is already an instance of the current <code>Incident</code>, a copy will be
+				created. If you added extra properties, they will be lost.</p>
+				<table>
+					<thead>
+						<tr>
+							<th style="text-align:center">cause</th>
+							<th style="text-align:center">name</th>
+							<th style="text-align:center">data</th>
+							<th style="text-align:center">message</th>
+							<th style="text-align:left">Comment</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center"></td>
+							<td style="text-align:center"></td>
+							<td style="text-align:center"></td>
+							<td style="text-align:left"><strong>Converts to an instance of this <code>Incident</code> constructor</strong></td>
+						</tr>
+						<tr>
+							<td style="text-align:center"></td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center"></td>
+							<td style="text-align:center"></td>
+							<td style="text-align:left"><code>&lt;Name&gt;(...): Incident&lt;Name, object, undefined&gt;</code></td>
+						</tr>
+						<tr>
+							<td style="text-align:center"></td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center"></td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:left"><code>&lt;Name&gt;(...): Incident&lt;Name, object, undefined&gt;</code></td>
+						</tr>
+						<tr>
+							<td style="text-align:center"></td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center"></td>
+							<td style="text-align:left"><code>&lt;Data, Name&gt;(...): Incident&lt;Name, Data, undefined&gt;</code></td>
+						</tr>
+						<tr>
+							<td style="text-align:center"></td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:left"><code>&lt;Data, Name&gt;(...): Incident&lt;Name, Data, undefined&gt;</code></td>
+						</tr>
+						<tr>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center"></td>
+							<td style="text-align:center"></td>
+							<td style="text-align:left"><code>&lt;Name, Cause&gt;(...): Incident&lt;Name, object, Cause&gt;</code></td>
+						</tr>
+						<tr>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center"></td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:left"><code>&lt;Name, Cause&gt;(...): Incident&lt;Name, object, Cause&gt;</code></td>
+						</tr>
+						<tr>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center"></td>
+							<td style="text-align:left"><code>&lt;Data, Name, Cause&gt;(...): Incident&lt;Name, Data, Cause&gt;</code></td>
+						</tr>
+						<tr>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:center">✔</td>
+							<td style="text-align:left"><code>&lt;Data, Name, Cause&gt;(...): Incident&lt;Name, Data, Cause&gt;</code></td>
+						</tr>
+					</tbody>
+				</table>
+				<h2 id="discriminated-union">Discriminated union</h2>
+				<pre><code class="lang-typescript"><span class="hljs-comment">// Example of type resolution on a discriminated type</span>
+<span class="hljs-keyword">import</span> Incident <span class="hljs-keyword">from</span> <span class="hljs-string">"incident"</span>;
+
+<span class="hljs-comment">// Associate the name "SyntaxError" to {index: number}</span>
+<span class="hljs-keyword">type</span> <span class="hljs-built_in">SyntaxError</span> = Incident&lt;<span class="hljs-string">"SyntaxError"</span>, {index: <span class="hljs-built_in">number</span>}, <span class="hljs-literal">undefined</span>&gt;;
+<span class="hljs-comment">// Associate the name "TypeError" to {typeName: string}</span>
+<span class="hljs-keyword">type</span> <span class="hljs-built_in">TypeError</span> = Incident&lt;<span class="hljs-string">"TypeError"</span>, {typeName: <span class="hljs-built_in">string</span>}, <span class="hljs-literal">undefined</span>&gt;;
+<span class="hljs-comment">// Created a discriminated type</span>
+<span class="hljs-keyword">type</span> BaseError = <span class="hljs-built_in">SyntaxError</span> | <span class="hljs-built_in">TypeError</span>;
+
+<span class="hljs-comment">// Example usage accepting the discriminated type</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">printError</span>(<span class="hljs-params">error: BaseError</span>): <span class="hljs-title">void</span> </span>{
+  <span class="hljs-comment">// Switch on the discriminant</span>
+  <span class="hljs-keyword">switch</span> (error.name) {
+    <span class="hljs-keyword">case</span> <span class="hljs-string">"SyntaxError"</span>:
+      <span class="hljs-comment">// No need to cast: successfully resolved to SyntaxError</span>
+      <span class="hljs-keyword">const</span> index: <span class="hljs-built_in">number</span> = error.data.index;
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Received a syntax error with index: <span class="hljs-subst">${index}</span>`</span>);
+      <span class="hljs-keyword">break</span>;
+    <span class="hljs-keyword">case</span> <span class="hljs-string">"TypeError"</span>:
+      <span class="hljs-comment">// Successfully resolved to TypeError</span>
+      <span class="hljs-keyword">const</span> typename: <span class="hljs-built_in">string</span> = error.data.typeName;
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Received a type error with typename: <span class="hljs-subst">${typename}</span>`</span>);
+      <span class="hljs-keyword">break</span>;
+  }
+}
+</code></pre>
+				<h2 id="license">License</h2>
+				<p><a href="./LICENSE.md">MIT License</a></p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_incident_.html">"incident"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_index_.html">"index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_.html">"types"</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
