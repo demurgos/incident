@@ -189,12 +189,16 @@ function createIncident(_super: Function): StaticInterface {
     if (this._stack === undefined || this._stack === null) {
       if (this._stackContainer !== undefined && this._stackContainer.stack !== undefined) {
         // This removes the firs lines corresponding to: "Error\n    at new Incident [...]"
-        const stack: string = this._stack === null ?
-          this._stackContainer.stack :
-          this._stackContainer.stack.replace(/^[^\n]+\n[^\n]+\n/, "");
-        this._stack = this.message === "" ?
-          `${this.name}\n${stack}` :
-          `${this.name}: ${this.message}\n${stack}`;
+        if (this._stack === null) {
+          // `null` indicates that the stack has to be used without any transformation
+          // This usually occurs when the stack container is an error that was converted
+          this._stack = this._stackContainer.stack;
+        } else {
+          const stack: string = this._stackContainer.stack.replace(/^[^\n]+\n[^\n]+\n/, "");
+          this._stack = this.message === "" ?
+            `${this.name}\n${stack}` :
+            `${this.name}: ${this.message}\n${stack}`;
+        }
       } else {
         this._stack = this.message === "" ? this.name : `${this.name}: ${this.message}`;
       }
@@ -202,7 +206,7 @@ function createIncident(_super: Function): StaticInterface {
         this._stack = `${this._stack}\n  caused by ${this.cause.stack}`;
       }
     }
-    Object.defineProperty(this, "message", {
+    Object.defineProperty(this, "stack", {
       configurable: true,
       value: this._stack,
       writable: true,

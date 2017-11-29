@@ -1,8 +1,10 @@
 # Next
 
+- **[Fix]** Keep original stack when converting native error to incident instance
 - **[Internal]** Enable greenkeeper integration
 - **[Internal]** Add code coverage support
 - **[Internal]** Enable codecoverage integration
+- **[Internal]** Complete code coverage
 
 # 3.0.0 (2017-11-12)
 

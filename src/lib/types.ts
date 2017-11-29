@@ -28,6 +28,12 @@ export interface StaticIncident {
      <D extends object, N extends string                 >(          name: N, data: D, message?: string | ((data: D     ) => string)): Incident<D,      N, undefined>;
 
   <D extends object, N extends string, C extends Error | undefined>(error: Error & {name: N; data: D; cause: C}): Incident<D,      N,      C        >;
+  <D extends object, N extends string                             >(error: Error & {name: N; data: D          }): Incident<D,      N,      undefined>;
+  <D extends object,                   C extends Error | undefined>(error: Error & {         data: D; cause: C}): Incident<D,      string, C        >;
+  <                  N extends string, C extends Error | undefined>(error: Error & {name: N;          cause: C}): Incident<object, N,      C        >;
+  <D extends object                                               >(error: Error & {         data: D          }): Incident<D,      string, undefined>;
+  <                  N extends string                             >(error: Error & {name: N                   }): Incident<object, N,      undefined>;
+  <                                    C extends Error | undefined>(error: Error & {                  cause: C}): Incident<object, string, C        >;
                                                                    (error: Error                               ): Incident<object, string, undefined>;
 }
 // tslint:enable
