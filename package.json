@@ -13,7 +13,16 @@
     "prepare": "gulp all:tsconfig.json && gulp :tslint.json && gulp lib:dist",
     "test": "gulp :lint && gulp test",
     "prepublishOnly": "npm test",
-    "lint": "gulp :lint"
+    "lint": "gulp :lint:fix"
+  },
+  "nyc": {
+    "include": [
+      "build/test/lib/**/*.js"
+    ],
+    "reporter": [
+      "text",
+      "html"
+    ]
   },
   "keywords": [
     "error"
@@ -29,12 +38,13 @@
     "@types/chai": "^4.0.4",
     "@types/mocha": "^2.2.41",
     "chai": "^4.1.2",
+    "codecov": "^3.0.0",
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-cli": "^1.4.0",
     "minimist": "^1.2.0",
     "pre-commit": "^1.2.2",
     "ts-node": "^3.3.0",
-    "turbo-gulp": "^0.15.4",
+    "turbo-gulp": "^0.15.7",
     "typescript": "^2.6.1"
   },
   "dependencies": {

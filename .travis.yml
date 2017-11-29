@@ -17,10 +17,11 @@ before_script:
 script:
 - npm test
 - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-- "./tools/continuous-deployment.travis.sh"
+- ./tools/continuous-deployment.travis.sh
 
 after_script:
 - greenkeeper-lockfile-upload
+- node node_modules/.bin/codecov
 
 env:
   global:

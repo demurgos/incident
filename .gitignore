@@ -5,17 +5,14 @@
 .idea/
 *.iml
 
-# Komodo
-*.komodoproject
-.komodotools
-
 ###############################################################################
 # Build                                                                       #
 ###############################################################################
 /build/
-# The line bellow should be commented in .npmignore
 /dist/
-# /docs/api/
+/typedoc/
+/coverage/
+/.nyc_output/
 
 ###############################################################################
 # Dependencies                                                                #
@@ -23,13 +20,15 @@
 # Node dependencies directory
 node_modules
 
+# Typings definitions
+typings
+
 ###############################################################################
-# Generated files                                                             #
+# Generated configuration files                                               #
 ###############################################################################
 src/**/tsconfig.json
 src/**/*.tsconfig.json
 /tslint.json
-/typedoc/
 
 ###############################################################################
 # Local configuration                                                         #

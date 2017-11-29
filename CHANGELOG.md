@@ -1,3 +1,9 @@
+# Next
+
+- **[Internal]** Enable greenkeeper integration
+- **[Internal]** Add code coverage support
+- **[Internal]** Enable codecoverage integration
+
 # 3.0.0 (2017-11-12)
 
 - **[Breaking change]** Require error name.
