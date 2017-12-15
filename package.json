@@ -43,7 +43,7 @@
     "gulp-cli": "^1.4.0",
     "minimist": "^1.2.0",
     "pre-commit": "^1.2.2",
-    "ts-node": "^3.3.0",
+    "ts-node": "^4.0.2",
     "turbo-gulp": "^0.15.7",
     "typescript": "^2.6.1"
   },
