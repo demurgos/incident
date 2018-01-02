@@ -34,6 +34,10 @@
   },
   "author": "Charles Samborski <demurgos@demurgos.net> (https://demurgos.net)",
   "license": "MIT",
+  "dependencies": {
+    "@types/object-inspect": "^1.4.0",
+    "object-inspect": "^1.4.0"
+  },
   "devDependencies": {
     "@types/chai": "^4.0.4",
     "@types/mocha": "^2.2.41",
@@ -46,9 +50,5 @@
     "ts-node": "^4.0.2",
     "turbo-gulp": "^0.15.7",
     "typescript": "^2.6.1"
-  },
-  "dependencies": {
-    "@types/object-inspect": "^1.4.0",
-    "object-inspect": "^1.4.0"
   }
 }
