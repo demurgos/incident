@@ -1,4 +1,4 @@
-import * as objectInspect from "object-inspect";
+import objectInspect from "object-inspect";
 import { Incident as Interface, StaticIncident as StaticInterface } from "./types";
 
 /**

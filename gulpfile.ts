@@ -3,6 +3,7 @@ import * as buildTools from "turbo-gulp";
 import * as gulp from "gulp";
 import * as minimist from "minimist";
 import { ParsedArgs } from "minimist";
+import * as typescript from "typescript";
 
 interface Options {
   devDist?: string;
@@ -20,6 +21,9 @@ const project: buildTools.Project = {
   buildDir: "build",
   distDir: "dist",
   srcDir: "src",
+  typescript: {
+    typescript,
+  },
 };
 
 const lib: buildTools.LibTarget = {
@@ -28,6 +32,7 @@ const lib: buildTools.LibTarget = {
   srcDir: "src/lib",
   scripts: ["**/*.ts"],
   mainModule: "index",
+  outModules: buildTools.OutModules.Both,
   dist: {
     packageJsonMap: (old: buildTools.PackageJson): buildTools.PackageJson => {
       const version: string = options.devDist !== undefined ? `${old.version}-build.${options.devDist}` : old.version;
@@ -38,8 +43,10 @@ const lib: buildTools.LibTarget = {
     },
   },
   customTypingsDir: "src/custom-typings",
-  tscOptions: {
+  tscOptions: <any> {
     skipLibCheck: true,
+    allowSyntheticDefaultImports: true,
+    esModuleInterop: true,
   },
   typedoc: {
     dir: "typedoc",
@@ -65,8 +72,10 @@ const test: buildTools.MochaTarget = {
   srcDir: "src",
   scripts: ["test/**/*.ts", "lib/**/*.ts"],
   customTypingsDir: "src/custom-typings",
-  tscOptions: {
+  tscOptions: <any> {
     skipLibCheck: true,
+    allowSyntheticDefaultImports: true,
+    esModuleInterop: true,
   },
   copy: [{files: ["test/scrapping/**/*.html"]}],
   clean: {

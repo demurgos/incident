@@ -3,7 +3,7 @@
   "version": "3.0.1",
   "description": "Errors with superpowers",
   "private": true,
-  "main": "dist/lib/index.js",
+  "main": "dist/lib/index",
   "types": "dist/lib/index.d.ts",
   "repository": {
     "type": "git",
@@ -11,7 +11,7 @@
   },
   "scripts": {
     "prepare": "gulp all:tsconfig.json && gulp :tslint.json && gulp lib:dist",
-    "test": "gulp :lint && gulp test",
+    "test": "gulp test",
     "prepublishOnly": "npm test",
     "lint": "gulp :lint:fix"
   },
@@ -39,16 +39,16 @@
     "object-inspect": "^1.4.0"
   },
   "devDependencies": {
-    "@types/chai": "^4.0.4",
-    "@types/mocha": "^2.2.41",
+    "@types/chai": "^4.1.0",
+    "@types/mocha": "^2.2.46",
     "chai": "^4.1.2",
     "codecov": "^3.0.0",
-    "gulp": "github:gulpjs/gulp#4.0",
-    "gulp-cli": "^1.4.0",
+    "gulp": "^4.0.0",
+    "gulp-cli": "^2.0.0",
     "minimist": "^1.2.0",
     "pre-commit": "^1.2.2",
     "ts-node": "^4.0.2",
     "turbo-gulp": "^0.15.7",
-    "typescript": "^2.6.1"
+    "typescript": "2.7.0-dev.20180109"
   }
 }
