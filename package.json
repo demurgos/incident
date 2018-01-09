@@ -1,6 +1,6 @@
 {
   "name": "incident",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "Errors with superpowers",
   "private": true,
   "main": "dist/lib/index",
