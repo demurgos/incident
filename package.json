@@ -11,6 +11,7 @@
   },
   "scripts": {
     "prepare": "gulp all:tsconfig.json && gulp :tslint.json && gulp lib:dist",
+    "pretest": "gulp :lint && gulp lib:build",
     "test": "gulp test",
     "prepublishOnly": "npm test",
     "lint": "gulp :lint:fix"
@@ -48,7 +49,7 @@
     "minimist": "^1.2.0",
     "pre-commit": "^1.2.2",
     "ts-node": "^4.0.2",
-    "turbo-gulp": "^0.15.7",
-    "typescript": "2.7.0-dev.20180109"
+    "turbo-gulp": "^0.16.0",
+    "typescript": "2.7.0-dev.20180111"
   }
 }

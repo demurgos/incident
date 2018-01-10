@@ -1,3 +1,7 @@
+# Next
+
+- **[Internal]** Update dependencies
+
 # 3.1.0 (2018-01-09)
 
 - **[Feature]** Add support for ES Modules

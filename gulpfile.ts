@@ -1,9 +1,7 @@
 import * as buildTools from "turbo-gulp";
 
-import * as gulp from "gulp";
-import * as minimist from "minimist";
-import { ParsedArgs } from "minimist";
-import * as typescript from "typescript";
+import gulp from "gulp";
+import minimist, { ParsedArgs } from "minimist";
 
 interface Options {
   devDist?: string;
@@ -21,9 +19,6 @@ const project: buildTools.Project = {
   buildDir: "build",
   distDir: "dist",
   srcDir: "src",
-  typescript: {
-    typescript,
-  },
 };
 
 const lib: buildTools.LibTarget = {
@@ -45,8 +40,6 @@ const lib: buildTools.LibTarget = {
   customTypingsDir: "src/custom-typings",
   tscOptions: <any> {
     skipLibCheck: true,
-    allowSyntheticDefaultImports: true,
-    esModuleInterop: true,
   },
   typedoc: {
     dir: "typedoc",
