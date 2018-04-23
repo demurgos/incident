@@ -127,7 +127,7 @@
 <span class="hljs-keyword">interface</span> StaticIncident; // Interface of the constructor
 <span class="hljs-keyword">interface</span> Incident; // Interface of the instance
 </code></pre>
-				<h3 id="-incident-"><code>Incident</code></h3>
+				<h3 id="incident"><code>Incident</code></h3>
 				<p>An <code>Incident</code> has the following interface:</p>
 				<pre><code class="lang-typescript"><span class="hljs-keyword">interface</span> Incident&lt;
   Data <span class="hljs-keyword">extends</span> object,
@@ -150,19 +150,19 @@
 					<li><strong>Cause</strong>: The type of the error cause. Use <code>undefined</code> if there is no cause.</li>
 				</ul>
 				<h3 id="attributes">Attributes</h3>
-				<h4 id="-name-"><code>name</code></h4>
+				<h4 id="name"><code>name</code></h4>
 				<p>A name uniquely identifying the error. Displayed at the top of the stack.</p>
-				<h4 id="-message-"><code>message</code></h4>
+				<h4 id="message"><code>message</code></h4>
 				<p>A debug message for developers describing the error. Displayed at the top of the stack.
 					If you provide <code>data</code> but no <code>message</code>, the message will be generate from the data using
 				<a href="https://github.com/substack/object-inspect">object-inspect</a> with default options.</p>
-				<h4 id="-data-"><code>data</code></h4>
+				<h4 id="data"><code>data</code></h4>
 				<p>A data object associated to the error. This should describe the error enough
 				to handle it programmatically.</p>
-				<h4 id="-cause-"><code>cause</code></h4>
+				<h4 id="cause"><code>cause</code></h4>
 				<p>A previous error that cause this error. This usually has more detail about
 				what happened.</p>
-				<h4 id="-stack-"><code>stack</code></h4>
+				<h4 id="stack"><code>stack</code></h4>
 				<p>The error stack of the incident. Contains the standard stack frames, and the
 				stack of the cause if there is any.</p>
 				<h3 id="constructor">Constructor</h3>
