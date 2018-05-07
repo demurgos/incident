@@ -1,5 +1,6 @@
 # Next
 
+- **[Feature]** Expose default formatter and increase its inspection depth.
 - **[Internal]** Update dependencies
 
 # 3.1.1 (2018-02-07)

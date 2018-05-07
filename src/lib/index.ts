@@ -1,2 +1,2 @@
-export { Incident } from "./incident";
+export { Incident, format } from "./incident";
 export { StaticIncident } from "./types";
