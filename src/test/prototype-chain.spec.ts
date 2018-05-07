@@ -1,17 +1,17 @@
-import { assert } from "chai";
+import chai from "chai";
 import { Incident } from "../lib/index";
 
 describe("Prototype chain", function () {
   it("`Incident()` should return an instance of Error and Incident", function () {
     const incident: Incident<object, "Incident", undefined> = Incident("Incident");
-    assert.instanceOf(incident, Error);
-    assert.instanceOf(incident, Incident);
+    chai.assert.instanceOf(incident, Error);
+    chai.assert.instanceOf(incident, Incident);
   });
 
   it("`new Incident()` should return an instance of Error and Incident", function () {
     const incident: Incident<object, "Incident", undefined> = new Incident("Incident");
-    assert.instanceOf(incident, Error);
-    assert.instanceOf(incident, Incident);
+    chai.assert.instanceOf(incident, Error);
+    chai.assert.instanceOf(incident, Incident);
   });
 
   it("`new IncidentSubClass()` should return an instance of Error, Incident and IncidentSubClass", function () {
@@ -22,8 +22,8 @@ describe("Prototype chain", function () {
     }
 
     const incident: Incident<object, "Incident", undefined> = new IncidentSubClass();
-    assert.instanceOf(incident, Error);
-    assert.instanceOf(incident, Incident);
-    assert.instanceOf(incident, IncidentSubClass);
+    chai.assert.instanceOf(incident, Error);
+    chai.assert.instanceOf(incident, Incident);
+    chai.assert.instanceOf(incident, IncidentSubClass);
   });
 });

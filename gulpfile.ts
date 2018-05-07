@@ -64,6 +64,7 @@ const test: buildTools.MochaTarget = {
   name: "test",
   srcDir: "src",
   scripts: ["test/**/*.ts", "lib/**/*.ts"],
+  outModules: buildTools.OutModules.Both,
   customTypingsDir: "src/custom-typings",
   tscOptions: <any> {
     skipLibCheck: true,

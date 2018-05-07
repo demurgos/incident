@@ -16,15 +16,6 @@
     "prepublishOnly": "npm test",
     "lint": "gulp :lint:fix"
   },
-  "nyc": {
-    "include": [
-      "build/test/lib/**/*.js"
-    ],
-    "reporter": [
-      "text",
-      "html"
-    ]
-  },
   "keywords": [
     "error"
   ],
@@ -53,5 +44,18 @@
     "ts-node": "^6.0.3",
     "turbo-gulp": "^0.17.1",
     "typescript": "^2.8.3"
+  },
+  "nyc": {
+    "include": [
+      "build/test/lib/**/*.js",
+      "build/test/lib/**/*.mjs"
+    ],
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "extension": [
+      ".mjs"
+    ]
   }
 }

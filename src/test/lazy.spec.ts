@@ -1,4 +1,4 @@
-import { assert } from "chai";
+import chai from "chai";
 import { Incident } from "../lib/index";
 
 describe("Lazy message", function () {
@@ -13,16 +13,16 @@ describe("Lazy message", function () {
       });
       callOrder.push("created-incident");
       callOrder.push("before-read");
-      assert.isString(incident.message);
+      chai.assert.isString(incident.message);
       callOrder.push("after-read");
       callOrder.push("before-read2");
-      assert.isString(incident.message);
+      chai.assert.isString(incident.message);
       callOrder.push("after-read2");
       callOrder.push("end-of-exec");
     }
 
     exec();
-    assert.deepEqual(callOrder, [
+    chai.assert.deepEqual(callOrder, [
       "start-of-exec",
       "created-incident",
       "before-read",
@@ -45,16 +45,16 @@ describe("Lazy message", function () {
       });
       callOrder.push("created-incident");
       callOrder.push("before-read");
-      assert.isString(incident.stack);
+      chai.assert.isString(incident.stack);
       callOrder.push("after-read");
       callOrder.push("before-read2");
-      assert.isString(incident.stack);
+      chai.assert.isString(incident.stack);
       callOrder.push("after-read2");
       callOrder.push("end-of-exec");
     }
 
     exec();
-    assert.deepEqual(callOrder, [
+    chai.assert.deepEqual(callOrder, [
       "start-of-exec",
       "created-incident",
       "before-read",
@@ -77,12 +77,12 @@ describe("Lazy message", function () {
       });
       callOrder.push("created-incident");
       callOrder.push("before-throw");
-      assert.throws(() => {
+      chai.assert.throws(() => {
         throw incident;
       });
       callOrder.push("after-throw");
       callOrder.push("before-throw2");
-      assert.throws(() => {
+      chai.assert.throws(() => {
         throw incident;
       });
       callOrder.push("after-throw2");
@@ -90,7 +90,7 @@ describe("Lazy message", function () {
     }
 
     exec();
-    assert.deepEqual(callOrder, [
+    chai.assert.deepEqual(callOrder, [
       "start-of-exec",
       "created-incident",
       "before-throw",
@@ -115,13 +115,13 @@ describe("Lazy message", function () {
       const copy: Incident<object, "Lazy", undefined> = Incident(base);
       callOrder.push("after-copy");
       callOrder.push("before-read");
-      assert.isString(copy.message);
+      chai.assert.isString(copy.message);
       callOrder.push("after-read");
       callOrder.push("end-of-exec");
     }
 
     exec();
-    assert.deepEqual(callOrder, [
+    chai.assert.deepEqual(callOrder, [
       "start-of-exec",
       "created-base",
       "after-copy",

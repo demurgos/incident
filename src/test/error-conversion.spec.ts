@@ -1,4 +1,4 @@
-import { assert } from "chai";
+import chai from "chai";
 import { Incident } from "../lib/index";
 import { assertEqualErrors } from "./helpers";
 
@@ -11,7 +11,7 @@ describe("Incident(error)", function () {
       data: {},
       message: "Simple error",
     });
-    assert.instanceOf(incident, Incident);
+    chai.assert.instanceOf(incident, Incident);
   });
 
   it("Incident(error: Error) with custom data", function () {
@@ -20,20 +20,20 @@ describe("Incident(error)", function () {
     }
 
     const base: Error & {data: Data} = Object.assign(new Error("Not so simple error"), {data: {foo: 1}});
-    assert.instanceOf(base, Error);
+    chai.assert.instanceOf(base, Error);
     const incident: Incident<Data, string, undefined> = Incident(base);
     assertEqualErrors(incident, {
       name: "Error",
       data: {foo: 1},
       message: "Not so simple error",
     });
-    assert.instanceOf(incident, Incident);
+    chai.assert.instanceOf(incident, Incident);
   });
 
   it("Incident(error: Error) with custom cause", function () {
     const cause: Error = new Error("Base cause");
     const base: Error & {cause: Error} = Object.assign(new Error("Error with cause"), {cause});
-    assert.instanceOf(base, Error);
+    chai.assert.instanceOf(base, Error);
     const incident: Incident<object, string, Error> = Incident(base);
     assertEqualErrors(incident, {
       name: "Error",
@@ -41,7 +41,7 @@ describe("Incident(error)", function () {
       cause,
       message: "Error with cause",
     });
-    assert.instanceOf(incident, Incident);
+    chai.assert.instanceOf(incident, Incident);
   });
 
   it("Incident(error: Error) with custom cause and data", function () {
@@ -54,7 +54,7 @@ describe("Incident(error)", function () {
       new Error("Advanced error"),
       {data: {foo: 1}, cause},
     );
-    assert.instanceOf(base, Error);
+    chai.assert.instanceOf(base, Error);
     const incident: Incident<Data, string, Error> = Incident(base);
     assertEqualErrors(incident, {
       name: "Error",
@@ -62,7 +62,7 @@ describe("Incident(error)", function () {
       cause,
       message: "Advanced error",
     });
-    assert.instanceOf(incident, Incident);
+    chai.assert.instanceOf(incident, Incident);
   });
 
   it("Incident(error: Incident<D, N, C>)", function () {
@@ -80,7 +80,7 @@ describe("Incident(error)", function () {
       message: "I'd tell you a UDP joke, but you might not get it.",
       cause,
     });
-    assert.instanceOf(incident, Incident);
-    assert.notEqual(incident, base);
+    chai.assert.instanceOf(incident, Incident);
+    chai.assert.notEqual(incident, base);
   });
 });

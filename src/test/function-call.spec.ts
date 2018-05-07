@@ -55,7 +55,6 @@ describe("Incident(...)", function () {
   it("Incident(cause, name, data,          )", function () {
     type Cause = Incident<{}, "NeedForEasyErrorManagement", undefined>;
     const cause: Cause = Incident("NeedForEasyErrorManagement", "");
-    const now: Date = new Date();
     const incident: Incident<{homepage: string; author: string}, "Incident", Cause> = Incident(
       cause,
       "Incident",

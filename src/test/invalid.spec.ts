@@ -1,13 +1,13 @@
-import { assert } from "chai";
+import chai from "chai";
 import { Incident } from "../lib/index";
 import { assertEqualErrors } from "./helpers";
 
 describe("Invalid calls", function () {
   it("new Incident()", function () {
-    assert.throws(() => new (<any> Incident)());
+    chai.assert.throws(() => new (<any> Incident)());
   });
   it("Incident()", function () {
-    assert.throws(() => (<any> Incident)());
+    chai.assert.throws(() => (<any> Incident)());
   });
 });
 

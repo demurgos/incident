@@ -2,6 +2,7 @@
 
 - **[Feature]** Expose default formatter and increase its inspection depth.
 - **[Internal]** Update dependencies
+- **[Internal]** Run tests on ESM
 
 # 3.1.1 (2018-02-07)
 

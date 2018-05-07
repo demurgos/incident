@@ -1,4 +1,4 @@
-import { assert } from "chai";
+import chai from "chai";
 import { Incident } from "../lib/index";
 
 // tslint:disable-next-line:max-line-length
@@ -18,7 +18,7 @@ export function assertEqualErrors<D extends object, N extends string = string, C
   for (const key in expected) {
     const actualProperty: any = (<any> actual)[key];
     const expectedProperty: any = (<any> expected)[key];
-    assert.deepEqual(
+    chai.assert.deepEqual(
       actualProperty,
       expectedProperty,
       `Expected \`${actualProperty}\` to be \`${expectedProperty}\` for ${key}`,
