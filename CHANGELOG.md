@@ -1,3 +1,7 @@
+# Next
+
+- **[Internal]** Update dependencies
+
 # 3.1.1 (2018-02-07)
 
 - **[Internal]** Update dependencies
