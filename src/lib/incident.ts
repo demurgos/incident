@@ -61,7 +61,7 @@ function createIncident(_super: Function): StaticInterface {
   }
 
   __.prototype = _super.prototype;
-  Incident.prototype = new (<any> __)();
+  Incident.prototype = new (__ as any)();
 
   // tslint:disable-next-line:max-line-length
   interface PrivateIncident<D extends object, N extends string = string, C extends (Error | undefined) = (Error | undefined)> extends Interface<D, N, C> {
@@ -86,12 +86,13 @@ function createIncident(_super: Function): StaticInterface {
 
   function Incident<D extends object, N extends string, C extends (Error | undefined) = (Error | undefined)>(
     this: PrivateIncident<D, N, C>,
-    ...args: any[],
+    // tslint:disable-next-line:trailing-comma
+    ...args: any[]
   ): Interface<D, N, C> | void {
     if (!(this instanceof Incident)) {
       switch (args.length) {
         case 0:
-          return new (<any> Incident)(noStackSymbol);
+          return new (Incident as any)(noStackSymbol);
         case 1:
           if (args[0] instanceof Error) {
             const err: Error & PrivateIncident<D, N, C> = args[0];
@@ -102,15 +103,15 @@ function createIncident(_super: Function): StaticInterface {
               : err.message;
             if (err.cause instanceof Error) {
               if (typeof err.data === "object") {
-                converted = new (<any> Incident)(noStackSymbol, err.cause, name, err.data, message);
+                converted = new (Incident as any)(noStackSymbol, err.cause, name, err.data, message);
               } else {
-                converted = new (<any> Incident)(noStackSymbol, err.cause, name, message);
+                converted = new (Incident as any)(noStackSymbol, err.cause, name, message);
               }
             } else {
               if (typeof err.data === "object") {
-                converted = new (<any> Incident)(noStackSymbol, name, err.data, message);
+                converted = new (Incident as any)(noStackSymbol, name, err.data, message);
               } else {
-                converted = new (<any> Incident)(noStackSymbol, name, message);
+                converted = new (Incident as any)(noStackSymbol, name, message);
               }
             }
             if (err._stackContainer !== undefined) {
@@ -123,13 +124,13 @@ function createIncident(_super: Function): StaticInterface {
             }
             return converted;
           }
-          return new (<any> Incident)(noStackSymbol, args[0]);
+          return new (Incident as any)(noStackSymbol, args[0]);
         case 2:
-          return new (<any> Incident)(noStackSymbol, args[0], args[1]);
+          return new (Incident as any)(noStackSymbol, args[0], args[1]);
         case 3:
-          return new (<any> Incident)(noStackSymbol, args[0], args[1], args[2]);
+          return new (Incident as any)(noStackSymbol, args[0], args[1], args[2]);
         default:
-          return new (<any> Incident)(noStackSymbol, args[0], args[1], args[2], args[3]);
+          return new (Incident as any)(noStackSymbol, args[0], args[1], args[2], args[3]);
       }
     }
 
@@ -181,9 +182,7 @@ function createIncident(_super: Function): StaticInterface {
     defineHiddenProperty(this, "_stackContainer", noStack ? undefined : new Error());
   }
 
-  Incident.prototype.toString = function (this: PrivateIncident<object>): string {
-    return Error.prototype.toString.apply(this, arguments);
-  };
+  Incident.prototype.toString = Error.prototype.toString;
 
   function getMessage(this: PrivateIncident<object>): string {
     if (typeof this._message === "function") {

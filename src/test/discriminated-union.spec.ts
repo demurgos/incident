@@ -66,12 +66,15 @@ describe("Discriminated union", function () {
       type TypeError = Incident<{typeName: string}, "TypeError", undefined>;
       type BaseError = SyntaxError | TypeError;
 
+      // @ts-ignore
       function printError(error: BaseError): void {
         switch (error.name) {
           case "SyntaxError":
+            // @ts-ignore
             const index: number = error.data.index;
             break;
           case "TypeError":
+            // @ts-ignore
             const typename: string = error.data.typeName;
             break;
           default:
