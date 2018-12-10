@@ -72,8 +72,7 @@
 				<a href="https://greenkeeper.io/"><img src="https://badges.greenkeeper.io/demurgos/incident.svg" alt="Greenkeeper badge"></a></p>
 				<p>Errors with superpowers.</p>
 				<h2 id="installation">Installation</h2>
-				<pre><code class="lang-shell">npm install --save incident
-</code></pre>
+				<pre><code class="language-shell">npm install --save incident</code></pre>
 				<h2 id="features">Features</h2>
 				<ul>
 					<li>Node and browser support.</li>
@@ -123,13 +122,12 @@
 				and allows for message formatters that are called only when needed.</p>
 				<h2 id="usage">Usage</h2>
 				<h3 id="exports">Exports</h3>
-				<pre><code class="lang-typescript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Incident</span></span>; <span class="hljs-comment">// The Incident constructor</span>
+				<pre><code class="language-typescript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Incident</span></span>; <span class="hljs-comment">// The Incident constructor</span>
 <span class="hljs-keyword">interface</span> StaticIncident; // Interface of the constructor
-<span class="hljs-keyword">interface</span> Incident; // Interface of the instance
-</code></pre>
+<span class="hljs-keyword">interface</span> Incident; // Interface of the instance</code></pre>
 				<h3 id="incident"><code>Incident</code></h3>
 				<p>An <code>Incident</code> has the following interface:</p>
-				<pre><code class="lang-typescript"><span class="hljs-keyword">interface</span> Incident&lt;
+				<pre><code class="language-typescript"><span class="hljs-keyword">interface</span> Incident&lt;
   Data <span class="hljs-keyword">extends</span> object,
   Name <span class="hljs-keyword">extends</span> string = string,
   Cause <span class="hljs-keyword">extends</span> (Error | undefined) = (Error | undefined)
@@ -140,8 +138,7 @@
   cause: Cause;
   stack: <span class="hljs-built_in">string</span>;
   toString(): <span class="hljs-built_in">string</span>;
-}
-</code></pre>
+}</code></pre>
 				<h3 id="generic-parameters">Generic parameters</h3>
 				<ul>
 					<li><strong>Name</strong>: The type of the name, use a literal string type to be able to switch
@@ -166,8 +163,7 @@
 				<p>The error stack of the incident. Contains the standard stack frames, and the
 				stack of the cause if there is any.</p>
 				<h3 id="constructor">Constructor</h3>
-				<pre><code class="lang-typescript"><span class="hljs-keyword">new</span> Incident&lt;Data, Name, Cause&gt;([cause,] name, [data,] [message]);
-</code></pre>
+				<pre><code class="language-typescript"><span class="hljs-keyword">new</span> Incident&lt;Data, Name, Cause&gt;([cause,] name, [data,] [message]);</code></pre>
 				<p>You can pass almost any combination of parameters you want as long as it is in the
 					right order (see table below for the details) and a name is specified. If you want
 					to explicitly define the generic parameters, you don&#39;t have to define the generic
@@ -220,72 +216,70 @@
 				<table>
 					<thead>
 						<tr>
-							<th style="text-align:center">cause</th>
-							<th style="text-align:center">name</th>
-							<th style="text-align:center">data</th>
-							<th style="text-align:center">message</th>
-							<th style="text-align:left">Comment</th>
+							<th align="center">cause</th>
+							<th align="center">name</th>
+							<th align="center">data</th>
+							<th align="center">message</th>
+							<th align="left">Comment</th>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td style="text-align:center"></td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center"></td>
-							<td style="text-align:center"></td>
-							<td style="text-align:left"><code>new&lt;Name&gt;(...): Incident&lt;Name, object, undefined&gt;</code></td>
+					<tbody><tr>
+							<td align="center">|  ✔</td>
+							<td align="center">|</td>
+							<td align="center"><code>new&lt;Name&gt;(...): Incident&lt;Name, object, undefined&gt;</code></td>
+							<td align="center"></td>
+							<td align="left"></td>
 						</tr>
 						<tr>
-							<td style="text-align:center"></td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center"></td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:left"><code>new&lt;Name&gt;(...): Incident&lt;Name, object, undefined&gt;</code></td>
+							<td align="center">|  ✔</td>
+							<td align="center">|   ✔</td>
+							<td align="center"><code>new&lt;Name&gt;(...): Incident&lt;Name, object, undefined&gt;</code></td>
+							<td align="center"></td>
+							<td align="left"></td>
 						</tr>
 						<tr>
-							<td style="text-align:center"></td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center"></td>
-							<td style="text-align:left"><code>new&lt;Data, Name&gt;(...): Incident&lt;Name, Data, undefined&gt;</code></td>
+							<td align="center">|  ✔</td>
+							<td align="center">✔</td>
+							<td align="center">|<code>new&lt;Data, Name&gt;(...): Incident&lt;Name, Data, undefined&gt;</code></td>
+							<td align="center"></td>
+							<td align="left"></td>
 						</tr>
 						<tr>
-							<td style="text-align:center"></td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:left"><code>new&lt;Data, Name&gt;(...): Incident&lt;Name, Data, undefined&gt;</code></td>
+							<td align="center">|  ✔</td>
+							<td align="center">✔</td>
+							<td align="center">✔</td>
+							<td align="center"><code>new&lt;Data, Name&gt;(...): Incident&lt;Name, Data, undefined&gt;</code></td>
+							<td align="left"></td>
 						</tr>
 						<tr>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center"></td>
-							<td style="text-align:center"></td>
-							<td style="text-align:left"><code>new&lt;Name, Cause&gt;(...): Incident&lt;Name, object, Cause&gt;</code></td>
+							<td align="center">✔</td>
+							<td align="center">✔</td>
+							<td align="center">|</td>
+							<td align="center"><code>new&lt;Name, Cause&gt;(...): Incident&lt;Name, object, Cause&gt;</code></td>
+							<td align="left"></td>
 						</tr>
 						<tr>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center"></td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:left"><code>new&lt;Name, Cause&gt;(...): Incident&lt;Name, object, Cause&gt;</code></td>
+							<td align="center">✔</td>
+							<td align="center">✔</td>
+							<td align="center">|   ✔</td>
+							<td align="center"><code>new&lt;Name, Cause&gt;(...): Incident&lt;Name, object, Cause&gt;</code></td>
+							<td align="left"></td>
 						</tr>
 						<tr>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center"></td>
-							<td style="text-align:left"><code>new&lt;Data, Name, Cause&gt;(...): Incident&lt;Name, Data, Cause&gt;</code></td>
+							<td align="center">✔</td>
+							<td align="center">✔</td>
+							<td align="center">✔</td>
+							<td align="center">|<code>new&lt;Data, Name, Cause&gt;(...): Incident&lt;Name, Data, Cause&gt;</code></td>
+							<td align="left"></td>
 						</tr>
 						<tr>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:left"><code>new&lt;Data, Name, Cause&gt;(...): Incident&lt;Name, Data, Cause&gt;</code></td>
+							<td align="center">✔</td>
+							<td align="center">✔</td>
+							<td align="center">✔</td>
+							<td align="center">✔</td>
+							<td align="left"><code>new&lt;Data, Name, Cause&gt;(...): Incident&lt;Name, Data, Cause&gt;</code></td>
 						</tr>
-					</tbody>
-				</table>
+				</tbody></table>
 				<h3 id="call">Call</h3>
 				<p>You can call <code>Incident</code> as a simple function. It has the same signature as
 					the <code>new</code> operator but <strong>does not capture the stack</strong>. You may want to use
@@ -301,81 +295,79 @@
 				<table>
 					<thead>
 						<tr>
-							<th style="text-align:center">cause</th>
-							<th style="text-align:center">name</th>
-							<th style="text-align:center">data</th>
-							<th style="text-align:center">message</th>
-							<th style="text-align:left">Comment</th>
+							<th align="center">cause</th>
+							<th align="center">name</th>
+							<th align="center">data</th>
+							<th align="center">message</th>
+							<th align="left">Comment</th>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center"></td>
-							<td style="text-align:center"></td>
-							<td style="text-align:center"></td>
-							<td style="text-align:left"><strong>Converts to an instance of this <code>Incident</code> constructor</strong></td>
+					<tbody><tr>
+							<td align="center">✔</td>
+							<td align="center">|</td>
+							<td align="center">|<strong>Converts to an instance of this <code>Incident</code> constructor</strong></td>
+							<td align="center"></td>
+							<td align="left"></td>
 						</tr>
 						<tr>
-							<td style="text-align:center"></td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center"></td>
-							<td style="text-align:center"></td>
-							<td style="text-align:left"><code>&lt;Name&gt;(...): Incident&lt;Name, object, undefined&gt;</code></td>
+							<td align="center">|  ✔</td>
+							<td align="center">|</td>
+							<td align="center"><code>&lt;Name&gt;(...): Incident&lt;Name, object, undefined&gt;</code></td>
+							<td align="center"></td>
+							<td align="left"></td>
 						</tr>
 						<tr>
-							<td style="text-align:center"></td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center"></td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:left"><code>&lt;Name&gt;(...): Incident&lt;Name, object, undefined&gt;</code></td>
+							<td align="center">|  ✔</td>
+							<td align="center">|   ✔</td>
+							<td align="center"><code>&lt;Name&gt;(...): Incident&lt;Name, object, undefined&gt;</code></td>
+							<td align="center"></td>
+							<td align="left"></td>
 						</tr>
 						<tr>
-							<td style="text-align:center"></td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center"></td>
-							<td style="text-align:left"><code>&lt;Data, Name&gt;(...): Incident&lt;Name, Data, undefined&gt;</code></td>
+							<td align="center">|  ✔</td>
+							<td align="center">✔</td>
+							<td align="center">|<code>&lt;Data, Name&gt;(...): Incident&lt;Name, Data, undefined&gt;</code></td>
+							<td align="center"></td>
+							<td align="left"></td>
 						</tr>
 						<tr>
-							<td style="text-align:center"></td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:left"><code>&lt;Data, Name&gt;(...): Incident&lt;Name, Data, undefined&gt;</code></td>
+							<td align="center">|  ✔</td>
+							<td align="center">✔</td>
+							<td align="center">✔</td>
+							<td align="center"><code>&lt;Data, Name&gt;(...): Incident&lt;Name, Data, undefined&gt;</code></td>
+							<td align="left"></td>
 						</tr>
 						<tr>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center"></td>
-							<td style="text-align:center"></td>
-							<td style="text-align:left"><code>&lt;Name, Cause&gt;(...): Incident&lt;Name, object, Cause&gt;</code></td>
+							<td align="center">✔</td>
+							<td align="center">✔</td>
+							<td align="center">|</td>
+							<td align="center"><code>&lt;Name, Cause&gt;(...): Incident&lt;Name, object, Cause&gt;</code></td>
+							<td align="left"></td>
 						</tr>
 						<tr>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center"></td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:left"><code>&lt;Name, Cause&gt;(...): Incident&lt;Name, object, Cause&gt;</code></td>
+							<td align="center">✔</td>
+							<td align="center">✔</td>
+							<td align="center">|   ✔</td>
+							<td align="center"><code>&lt;Name, Cause&gt;(...): Incident&lt;Name, object, Cause&gt;</code></td>
+							<td align="left"></td>
 						</tr>
 						<tr>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center"></td>
-							<td style="text-align:left"><code>&lt;Data, Name, Cause&gt;(...): Incident&lt;Name, Data, Cause&gt;</code></td>
+							<td align="center">✔</td>
+							<td align="center">✔</td>
+							<td align="center">✔</td>
+							<td align="center">|<code>&lt;Data, Name, Cause&gt;(...): Incident&lt;Name, Data, Cause&gt;</code></td>
+							<td align="left"></td>
 						</tr>
 						<tr>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:center">✔</td>
-							<td style="text-align:left"><code>&lt;Data, Name, Cause&gt;(...): Incident&lt;Name, Data, Cause&gt;</code></td>
+							<td align="center">✔</td>
+							<td align="center">✔</td>
+							<td align="center">✔</td>
+							<td align="center">✔</td>
+							<td align="left"><code>&lt;Data, Name, Cause&gt;(...): Incident&lt;Name, Data, Cause&gt;</code></td>
 						</tr>
-					</tbody>
-				</table>
+				</tbody></table>
 				<h2 id="discriminated-union">Discriminated union</h2>
-				<pre><code class="lang-typescript"><span class="hljs-comment">// Example of type resolution on a discriminated type</span>
+				<pre><code class="language-typescript"><span class="hljs-comment">// Example of type resolution on a discriminated type</span>
 <span class="hljs-keyword">import</span> Incident <span class="hljs-keyword">from</span> <span class="hljs-string">"incident"</span>;
 
 <span class="hljs-comment">// Associate the name "SyntaxError" to {index: number}</span>
@@ -400,8 +392,7 @@
       <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Received a type error with typename: <span class="hljs-subst">${typename}</span>`</span>);
       <span class="hljs-keyword">break</span>;
   }
-}
-</code></pre>
+}</code></pre>
 				<h2 id="license">License</h2>
 				<p><a href="./LICENSE.md">MIT License</a></p>
 			</div>
