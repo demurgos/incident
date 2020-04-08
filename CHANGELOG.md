@@ -1,4 +1,4 @@
-# Next
+# 3.2.1 (2020-04-08)
 
 - **[Feature]** Add `default` export.
 - **[Internal]** Update dependencies.
