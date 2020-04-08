@@ -4,7 +4,6 @@
 [![GitHub repository](https://img.shields.io/badge/Github-demurgos%2Fincident-blue.svg)](https://github.com/demurgos/incident)
 [![Build status](https://img.shields.io/travis/demurgos/incident/master.svg?maxAge=2592000)](https://travis-ci.org/demurgos/incident)
 [![Codecov](https://codecov.io/gh/demurgos/incident/branch/master/graph/badge.svg)](https://codecov.io/gh/demurgos/incident)
-[![Greenkeeper badge](https://badges.greenkeeper.io/demurgos/incident.svg)](https://greenkeeper.io/)
 
 Errors with superpowers.
 

@@ -95,7 +95,7 @@ function createIncident(_super: Function): StaticInterface {
           return new (Incident as any)(noStackSymbol);
         case 1:
           if (args[0] instanceof Error) {
-            const err: Error & PrivateIncident<D, N, C> = args[0];
+            const err: Error & PrivateIncident<D, N, C> = args[0] as any;
             let converted: PrivateIncident<D, N, C>;
             const name: string = err.name;
             const message: string | ((data: D) => string) = typeof err._message === "function"
@@ -115,7 +115,7 @@ function createIncident(_super: Function): StaticInterface {
               }
             }
             if (err._stackContainer !== undefined) {
-              converted._stackContainer = args[0]._stackContainer;
+              converted._stackContainer = (args[0] as any)._stackContainer;
             } else if (err._stack === undefined) {
               converted._stackContainer = args[0];
               converted._stack = null; // Use the stack as-is
