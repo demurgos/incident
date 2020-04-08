@@ -1,5 +1,6 @@
 # Next
 
+- **[Feature]** Add `default` export.
 - **[Internal]** Update dependencies.
 
 # 3.2.0 (2018-12-10)
